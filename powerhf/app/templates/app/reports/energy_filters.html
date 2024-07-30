@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <title>PowerHF • Energy Filter</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="card right-middel-card expand-table border-0 mt-4">
+                    <div class="headings fh7y_u8y">
+                        <div style="margin-left: 15px; margin-right: 15px; margin-top: 10px;">
+                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                <div class="col-md-6">
+                                    <h5 class="fw-normal">Reports (Energy)</h5>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    {% if fuel_report %}
+                                    <button type="button" id="btn-download-id"
+                                        class="btn btn-secondary btn-sm p-2 rounded-circle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="14.5" width="14.5"
+                                            style="margin-bottom: 4px;" viewBox="0 0 512 512">
+                                            <path fill="#ffffff"
+                                                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
+                                        </svg>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-reports mt-4">
+                            <div class="hfy-ty665">
+                                <form action="{% url 'energy_dfr_filter' %}" method="GET">
+                                    <div class="inner-filters">
+                                        <input type="text" id="search_data_fuel_drawn" name="search_name"
+                                            class="inputformsfill" placeholder="Search your data"
+                                            style="width: 250px; margin-left: 1rem; margin-right: 2rem;">
+
+                                        <input type="date" id="date_df1" name="start_date"
+                                            class="inputformsfill dateFilter" style="width: 200px; margin-left: 1rem;">
+
+                                        <span style="margin-left: 10px;margin-right: 10px;">To</span>
+
+                                        <input type="date" id="date_df2" name="end_date"
+                                            class="inputformsfill dateFilter" style="width: 200px;margin-right: 10px;">
+
+                                        <input type="submit" class="btn_filter_dt bg-secondary" value="Show">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="inner-table mt-3">
+                            <div class="fhy865">
+                                <div class="d-flex">
+                                    <a href="{% url 'atc_site_report' %}" class="list-dt-energy">DFR</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'fuel_drawn' %}" class="list-dt-energy">Fuel Drawn</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'diesel_filling' %}" class="list-dt-energy">Energy
+                                        Reading</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'diese_filling_fsr_report' %}" class="list-dt-energy">Diesel Filling FSR</a>
+                                </div>
+                            </div>
+                            <div class="innerderf mt-3">
+                                {% if fuel_report %}
+                                <table class="table dt-table filter_out_dt">
+                                    <thead>
+                                        <tr class="table-head">
+                                            <th scope="col" class="read-status">Global ID</th>
+                                            <th scope="col" class="read-status">Site Name</th>
+                                            <th scope="col" class="size-expand">Site Address</th>
+                                            <th scope="col" class="read-status">Cluster</th>
+                                            <th scope="col" class="read-status">CE</th>
+                                            <th scope="col" class="read-status">Site Tenancy</th>
+                                            <th scope="col" class="read-status">DG NON DG</th>
+                                            <th scope="col" style="min-width: 150px;">DG Capacity kva</th>
+                                            <th scope="col" class="read-status">EB Status</th>
+                                            <th scope="col" class="read-status">Card Number</th>
+                                            <th scope="col" style="min-width: 200px;">Last Month Approved CPH
+                                            </th>
+                                            <th scope="col" style="min-width: 150px;">DG Serial Number</th>
+                                            <th scope="col" style="min-width: 150px;">DG HMR Status</th>
+                                            <th scope="col" style="min-width: 150px;">DG HMR Reading</th>
+                                            <th scope="col" style="min-width: 150px;">DG PIU Status</th>
+                                            <th scope="col" style="min-width: 200px;">Current DG PIU Reading
+                                            </th>
+                                            <th scope="col" style="min-width: 150px;">Diesel Filling Done</th>
+                                            <th scope="col" style="min-width: 150px;">Date Of Diesel
+                                                Filling</th>
+                                            <th scope="col" style="min-width: 200px;">Diesel Balance Before
+                                                Filling</th>
+                                            <th scope="col" style="min-width: 150px;">Fuel Qty Filled</th>
+                                            <th scope="col" style="min-width: 150px;">Current Diesel Balance
+                                            </th>
+                                            <th scope="col" style="min-width: 130px;">EB Meter Status</th>
+                                            <th scope="col" style="min-width: 150px;">Current EB MTR KWH</th>
+                                            <th scope="col" style="min-width: 150px;">EB PIU Meter Status</th>
+                                            <th scope="col" style="min-width: 180px;">Current EB PIU Reading
+                                            </th>
+                                            <th scope="col" class="read-status">Remarks</th>
+                                            <th scope="col" class="read-status">FT ID</th>
+                                            <th scope="col" class="read-status">FT Name</th>
+                                            <th scope="col" style="min-width: 150px;">FT Mobile Number</th>
+                                            <th scope="col" class="read-status">Receipt No</th>
+                                            <th scope="col" class="read-status">Card Number</th>
+                                            <th scope="col" class="read-status">Vehicle Plate</th>
+                                            <th scope="col" style="min-width: 140px;">DG Running HRS</th>
+                                            <th scope="col" style="min-width: 300px;">CPH & Comparison With
+                                                Approved CPH</th>
+                                            <th scope="col" class="read-status">CPH as par HMR</th>
+                                            <th scope="col" class="read-status">CPH as par PIU</th>
+                                            <th scope="col" class="read-status">EB KWH</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-fkift6t">
+                                        {% for feul in fuel_report %}
+                                        <tr class="table-dt-data">
+                                            <td>{{feul.global_id}}</td>
+                                            <td>{{feul.global_id.site_name}}</td>
+                                            <td>{{feul.global_id.site_address}}</td>
+                                            <td>{{feul.global_id.cluster}}</td>
+                                            <td>{{feul.global_id.CE}}</td>
+                                            <td>{{feul.global_id.site_tenancy}}</td>
+                                            <td>{{feul.global_id.DG_NON_DG}}</td>
+                                            <td>{{feul.global_id.DG_capacity_kva}}</td>
+                                            <td>{{feul.global_id.EB_status}}</td>
+                                            <td>{{feul.global_id.card_number}}</td>
+                                            <td>{{feul.global_id.last_month_approved_CPH}}</td>
+                                            <td>{{feul.DG_Serial_Number}}</td>
+                                            <td>{{feul.DG_HMR_Status}}</td>
+                                            <td>{{feul.DG_HMR_Reading}}</td>
+                                            <td>{{feul.DG_PIU_Status}}</td>
+                                            <td>{{feul.Current_DG_PIU_Reading}}</td>
+                                            <td>{{feul.Diesel_Filling_Done}}</td>
+                                            <td>{{feul.Date_Of_Diesel_Filling | date:"d M Y"}}</td>
+                                            <td>{{feul.Diesel_Balance_Before_Filling}}</td>
+                                            <td>{{feul.Fuel_Qty_Filled}}</td>
+                                            <td>{{feul.Current_Diesel_Balance}}</td>
+                                            <td>{{feul.EB_Meter_Status}}</td>
+                                            <td>{{feul.Current_EB_MTR_KWH}}</td>
+                                            <td>{{feul.EB_PIU_Meter_Status}}</td>
+                                            <td>{{feul.Current_EB_PIU_Reading}}</td>
+                                            <td>{{feul.Remarks}}</td>
+                                            <td>{{feul.FT_ID}}</td>
+                                            <td>{{feul.FT_name}}</td>
+                                            <td>{{feul.FT_mobile_no}}</td>
+                                            <td>{{feul.Receipt_No}}</td>
+                                            <td>{{feul.Card_Number}}</td>
+                                            <td>{{feul.Vehicle_Plate}}</td>
+                                            <!-- <td>
+                                                        {% if feul.Before_Fuel_CM_Photo != '' %}
+                                                        <a href="{{feul.Before_Fuel_CM_Photo.url}}" target="_blank">
+                                                            <img src="{{feul.Before_Fuel_CM_Photo.url}}" height="50px"
+                                                                width="100" alt="{{feul.Before_Fuel_CM_Photo}}">
+                                                        </a>
+                                                        {% else %}
+                                                        No
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if feul.After_Fuel_Filling_CM_Photo != '' %}
+                                                        <a href="{{feul.After_Fuel_Filling_CM_Photo.url}}"
+                                                            target="_blank">
+                                                            <img src="{{feul.After_Fuel_Filling_CM_Photo.url}}"
+                                                                height="50px" width="100"
+                                                                alt="{{feul.After_Fuel_Filling_CM_Photo}}">
+                                                        </a>
+                                                        {% else %}
+                                                        No
+                                                        {% endif %}
+                                                    </td> -->
+                                            <td>{{feul.DG_Running_HRS}}</td>
+                                            <td>{{feul.CPH_CPH_Comparison_With_Last_CPH}}</td>
+                                            <td>{{feul.CPH_as_par_HMR}}</td>
+                                            <td>{{feul.CPH_as_par_PIU}}</td>
+                                            <td>{{feul.EB_KWH}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <div class="mt-5 pt-5 text-center">
+                                    <h6 class="fw-5 text-secondary">No Data has been found</h6>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'app/offcanvas_down.html' %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'app/js/style.js' %}"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+    <script>
+        function RemoveBGColor() {
+            document.getElementsByClassName("accordion-button").stylle.backgroundColor = 'white'
+        } 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#search_data_fuel_drawn").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#report-fkift6t tr").filter(function () {
+                    $(this).toggle($(this).text()
+                        .toLowerCase().indexOf(value) > -1)
+                });
+            });
+        }); 
+    </script>
+
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#btn-download-id").click(function () {
+                let table = document.getElementsByClassName("filter_out_dt");
+                TableToExcel.convert(table[0], {
+                    name: `ATC_energy_data.xlsx`,
+                    sheet: {
+                        name: 'Energy ATC'
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

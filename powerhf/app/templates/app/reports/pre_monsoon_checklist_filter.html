@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <title>PowerHF • Pre-Monsoon Checklist Filter</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="card right-middel-card expand-table border-0 mt-4">
+                    <div class="headings fh7y_u8y">
+                        <div style="margin-left: 15px; margin-right: 15px; margin-top: 10px;">
+                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                <div class="col-md-6">
+                                    <h5 class="fw-normal">Reports (PML Checklist)</h5>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    {% if monsoon_report %}
+                                    <button type="button" id="btn-download-id"
+                                        class="btn btn-secondary btn-sm p-2 rounded-circle">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12"
+                                            style="margin-bottom: 4px;" viewBox="0 0 512 512">
+                                            <path fill="#ffffff"
+                                                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
+                                        </svg>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-reports mt-4">
+                            <div class="hfy-ty665">
+                                <div class="outer-7yt">
+                                    <input type="text" id="search_data_fuel_drawn" name="search_name"
+                                        class="inputformsfill" placeholder="Search your data"
+                                        style="width: 250px; margin-left: 1rem; margin-right: 2rem;">
+                                </div>
+                                <form action="{% url 'mon_check_report_Filter' %}" method="GET">
+                                    <div class="inner-filters">
+                                        <input type="date" id="date_df1" name="start_date"
+                                            class="inputformsfill dateFilter" style="width: 200px; margin-left: 1rem;">
+
+                                        <span style="margin-left: 10px;margin-right: 10px;">To</span>
+
+                                        <input type="date" id="date_df2" name="end_date"
+                                            class="inputformsfill dateFilter" style="width: 200px;margin-right: 10px;">
+
+                                        <input type="submit" class="btn_filter_dt bg-secondary" value="Show">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="inner-error-downd"></div>
+                        <div class="inner-table mt-3">
+                            <div class="innerderf mt-3">
+                                {% if pmcl_report %}
+                                <table class="table dt-table data_in_excel">
+                                    <thead>
+                                        <tr class="table-head">
+                                            <th scope="col" class="read-status" style="min-width: 50px;">Sr No.</th>
+                                            <th scope="col" class="read-status">Downloads</th>
+                                            <th scope="col" class="read-status">Global ID</th>
+                                            <th scope="col" class="read-status">Date</th>
+                                            <th scope="col" class="read-status">Time</th>
+                                            <th scope="col" class="read-status">User</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q1 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q1 Status</th>
+                                            <th scope="col" class="read-status">Q1 Material Required</th>
+                                            <th scope="col" class="read-status">Q1 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q2 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q2 Status</th>
+                                            <th scope="col" class="read-status">Q2 Material Required</th>
+                                            <th scope="col" class="read-status">Q2 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q3 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q3 Status</th>
+                                            <th scope="col" class="read-status">Q3 Material Required</th>
+                                            <th scope="col" class="read-status">Q3 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q4 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q4 Status</th>
+                                            <th scope="col" class="read-status">Q4 Material Required</th>
+                                            <th scope="col" class="read-status">Q4 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q5 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q5 Status</th>
+                                            <th scope="col" class="read-status">Q5 Material Required</th>
+                                            <th scope="col" class="read-status">Q5 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q6 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q6 Status</th>
+                                            <th scope="col" class="read-status">Q6 Material Required</th>
+                                            <th scope="col" class="read-status">Q6 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q7 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q7 Status</th>
+                                            <th scope="col" class="read-status">Q7 Material Required</th>
+                                            <th scope="col" class="read-status">Q7 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q8 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q8 Status</th>
+                                            <th scope="col" class="read-status">Q8 Material Required</th>
+                                            <th scope="col" class="read-status">Q8 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q9 Attachments
+                                            </th>
+                                            <th scope="col" class="read-status">Q9 Status</th>
+                                            <th scope="col" class="read-status">Q9 Material Required</th>
+                                            <th scope="col" class="read-status">Q9 Remarks</th>
+                                            <th scope="col" class="read-status" style="min-width: 23rem;">Q10
+                                                Attachments</th>
+                                            <th scope="col" class="read-status">Q10 Status</th>
+                                            <th scope="col" class="read-status">Q10 Material Required</th>
+                                            <th scope="col" class="read-status">Q10 Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-h6yt">
+                                        {% for mon in pmcl_report %}
+                                        <tr class="table-dt-data">
+                                            <td class="fw-bold text-secondary">{{forloop.counter}}</td>
+                                            <td>
+                                                <button type="button" id="btn-download-one-dt-PMCL"
+                                                    class="bg-secondary btn-downloadPMCL"
+                                                    onclick="PreMonsoonCheckList('{{mon.id}}')">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12"
+                                                        style="margin-bottom: 4px;" viewBox="0 0 512 512">
+                                                        <path fill="#ffffff"
+                                                            d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                            <td>{{mon.global_id.global_id}}</td>
+                                            <td>{{mon.date}}</td>
+                                            <td>{{mon.time}}</td>
+                                            <td>{{mon.user.first_name}} {{mon.user.last_name}}</td>
+                                            <td>
+                                                {% if mon.Q1_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q1_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q1_Status}}</td>
+                                            <td>{{mon.Q1_Material_Required}}</td>
+                                            <td>{{mon.Q1_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q2_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q2_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q2_Status}}</td>
+                                            <td>{{mon.Q2_Material_Required}}</td>
+                                            <td>{{mon.Q2_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q3_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q3_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q3_Status}}</td>
+                                            <td>{{mon.Q3_Material_Required}}</td>
+                                            <td>{{mon.Q3_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q4_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q4_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q4_Status}}</td>
+                                            <td>{{mon.Q4_Material_Required}}</td>
+                                            <td>{{mon.Q4_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q5_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q5_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q5_Status}}</td>
+                                            <td>{{mon.Q5_Material_Required}}</td>
+                                            <td>{{mon.Q5_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q6_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q6_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q6_Status}}</td>
+                                            <td>{{mon.Q6_Material_Required}}</td>
+                                            <td>{{mon.Q6_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q7_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q7_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q7_Status}}</td>
+                                            <td>{{mon.Q7_Material_Required}}</td>
+                                            <td>{{mon.Q7_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q8_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q1_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q8_Status}}</td>
+                                            <td>{{mon.Q8_Material_Required}}</td>
+                                            <td>{{mon.Q8_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q9_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q9_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q9_Status}}</td>
+                                            <td>{{mon.Q9_Material_Required}}</td>
+                                            <td>{{mon.Q9_Remarks}}</td>
+                                            <td>
+                                                {% if mon.Q10_Attach.all %}
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    {% for att in mon.Q10_Attach.all %}
+                                                    <div class="col">
+                                                        <a href="{{att.images.url}}" class="text-decoration-none"
+                                                            target="_blank">
+                                                            <img src="{{att.images.url}}" class="card-img-top"
+                                                                style="width: 100px; height: 80px; border-radius: 5px;"
+                                                                alt="...">
+                                                        </a>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                <span class="text-danger text-center">No Attachments</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{mon.Q10_Status}}</td>
+                                            <td>{{mon.Q10_Material_Required}}</td>
+                                            <td>{{mon.Q10_Remarks}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <div class="mt-5 pt-5 text-center">
+                                    <h6 class="fw-5 text-secondary">No Monsoon Checklist Filter data</h6>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'app/offcanvas_down.html' %}
+        <div class="hide-dfr-data" id="hidden-on-download-PMCL-table"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'app/js/style.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#search_data_fuel_drawn").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#report-h6yt tr").filter(function () {
+                    $(this).toggle($(this).text()
+                        .toLowerCase().indexOf(value) > -1)
+                });
+            });
+        }); 
+    </script>
+
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#btn-download-id").click(function () {
+                let table = document.getElementsByClassName("data_in_excel");
+                TableToExcel.convert(table[0], {
+                    name: `pre-monsoon-checklist-filter.xlsx`,
+                    sheet: {
+                        name: 'Pre-Monsoon Checklist filter'
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function PreMonsoonCheckList(PMCL_data) {
+            fetch(`http://136.232.18.42:8088/api/data-fuel/pre-monsoon/${PMCL_data}`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                }
+            })
+                .then(response => response.json())
+                .then(result => {
+                    var data = result.checklist;
+                    var output = '';
+                    var output_error = '';
+                    if (result.status == 'true') {
+                        for (var i in data) {
+                            output += `
+                                <table class="table border PMCL_data_monsoon" style="width: 70rem;">
+                                    <thead class="border">
+                                        <tr class="border justify-content-center">
+                                            <th colspan="5" class="text-center border">Pre-Monsoon Check list</th>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col" class="border text-center">Sr. No.</th>
+                                            <th scope="col" class="border text-center">Check Points</th>
+                                            <th scope="col" class="border text-center">Status ( OK / Not Ok)</th>
+                                            <th scope="col" class="border text-center">Material Required</th>
+                                            <th scope="col" class="border text-center">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="border text-center" scope="row">1</th>
+                                            <td class="border">How is the Approach road condition during monsoons.</td>
+                                            <td class="border text-center">${data[i].Q1_Status}</td>
+                                            <td class="border text-center">${data[i].Q1_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q1_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">2</th>
+                                            <td class="border">Is there any possibility of water logging during monsoon.</td>
+                                            <td class="border text-center">${data[i].Q2_Status}</td>
+                                            <td class="border text-center">${data[i].Q2_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q2_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">3</th>
+                                            <td class="border">Over all Visual inspection of sites, any abnormality in DG, Shelter / ODC, Tower
+                                                foundation. Provide details.</td>
+                                            <td class="border text-center">${data[i].Q3_Status}</td>
+                                            <td class="border text-center">${data[i].Q3_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q3_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">4</th>
+                                            <td class="border">Ensure that there is no water leakage through cable entry module (roxtek entry),
+                                                Power/ Earthing cables Entry Points to be properly sealed for the DG, Shelter/ ODC.</td>
+                                            <td class="border text-center">${data[i].Q4_Status}</td>
+                                            <td class="border text-center">${data[i].Q4_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q4_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">5</th>
+                                            <td class="border">Check the condition of the AMF Panel Glass.</td>
+                                            <td class="border text-center">${data[i].Q5_Status}</td>
+                                            <td class="border text-center">${data[i].Q5_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q5_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">6</th>
+                                            <td class="border">Check for water leakage in meter box and Kit Kat / Fuse Box.</td>
+                                            <td class="border text-center">${data[i].Q6_Status}</td>
+                                            <td class="border text-center">${data[i].Q6_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q6_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">7</th>
+                                            <td class="border">Check for the availability and connection of the lightning Arrestor (LA) on Tower and
+                                                Transformer.</td>
+                                            <td class="border text-center">${data[i].Q7_Status}</td>
+                                            <td class="border text-center">${data[i].Q7_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q7_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">8</th>
+                                            <td class="border">Check for the shelter / ODC leakage.</td>
+                                            <td class="border text-center">${data[i].Q8_Status}</td>
+                                            <td class="border text-center">${data[i].Q8_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q8_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">9</th>
+                                            <td class="border">Check for the DG canopy and silencer leakage.</td>
+                                            <td class="border text-center">${data[i].Q9_Status}</td>
+                                            <td class="border text-center">${data[i].Q9_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q9_Remarks}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="border text-center" scope="row">10</th>
+                                            <td class="border">Check that all earthing cable connectivity of all equipment's till the earth pit bus
+                                                bar.</td>
+                                            <td class="border text-center">${data[i].Q10_Status}</td>
+                                            <td class="border text-center">${data[i].Q10_Material_Required}</td>
+                                            <td class="border text-center">${data[i].Q10_Remarks}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                `
+                        }
+                        document.getElementById("hidden-on-download-PMCL-table").innerHTML = output;
+                        let table = document.getElementsByClassName("PMCL_data_monsoon");
+                        TableToExcel.convert(table[0], {
+                            name: `monsoon-checklist.xlsx`,
+                            sheet: {
+                                name: 'Monsoon Checklist'
+                            },
+                            format: {
+                                align: 'center',
+                                fill: {
+                                    type: "pattern",
+                                    patternType: "solid",
+                                    bgColor: "#FFFF00",
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        output_error += `
+                            <div class="card error mb-3 mt-3 p-2" id="Error-close"
+                                style="margin-left: 0.8rem; margin-right: 1.5rem;">
+                                <div class="d-flex">
+                                    <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
+                                        <span>Getting some errors, Please try again.</span>
+                                    </div>
+                                    <div class="inr-success-int2">
+                                        <button class="btn-close-err-msg" id="btncloseerrmsg" onclick="BtnErrorClose()">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"
+                                                class="text-white">
+                                                <path fill="#545454"
+                                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                        document.getElementById("inner-error-downd").innerHTML = output_error;
+                    }
+                })
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+    <title>PowerHF • Diesel Filling FSR</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="card right-middel-card expand-table border-0 mt-4">
+                    <div class="headings fh7y_u8y">
+                        <div style="margin-left: 15px; margin-right: 15px; margin-top: 10px;">
+                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                <div class="col-md-6">
+                                    <h5 class="fw-normal">Reports (Energy)</h5>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    {% if all_fsr_data %}
+                                    <button type="button" id="btn-download-id" class="bg-secondary btn-downloadall">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12"
+                                            style="margin-bottom: 4px;" viewBox="0 0 512 512">
+                                            <path fill="#ffffff"
+                                                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
+                                        </svg>
+                                        Download all
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-reports mt-4">
+                            <div class="hfy-ty665">
+                                <div class="outer-7yt">
+                                    <input type="text" id="search_data_fuel_drawn" name="search_name"
+                                        class="inputformsfill" placeholder="Search your data"
+                                        style="width: 250px; margin-left: 1rem; margin-right: 2rem;">
+                                </div>
+                                <!-- <form action="" method="GET">
+                                    <div class="inner-filters">
+                                        <input type="date" id="date_df1" name="start_date"
+                                            class="inputformsfill dateFilter" style="width: 200px; margin-left: 1rem;">
+
+                                        <span style="margin-left: 10px;margin-right: 10px;">To</span>
+
+                                        <input type="date" id="date_df2" name="end_date"
+                                            class="inputformsfill dateFilter" style="width: 200px;margin-right: 10px;">
+
+                                        <input type="submit" class="btn_filter_dt bg-secondary" value="Show">
+                                    </div>
+                                </form> -->
+                            </div>
+                        </div>
+                        <div class="inner-table mt-3">
+                            <div class="fhy865">
+                                <div class="d-flex">
+                                    <a href="{% url 'atc_site_report' %}" class="list-dt-energy">DFR</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'fuel_drawn' %}" class="list-dt-energy">Fuel Drawn</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'diesel_filling' %}" class="list-dt-energy">Energy
+                                        Reading</a>
+                                </div>
+                                <div class="d-flex bdr-k8iu">
+                                    <a href="{% url 'diese_filling_fsr_report' %}" class="list-dt-energy col-r6t">Diesel Filling FSR</a>
+                                </div>
+                            </div>
+                            <div class="innerderf mt-3">
+                                {% if fuel_report %}
+                                <table class="table dt-table">
+                                    <thead>
+                                        <tr class="table-head">
+                                            <th scope="col" class="read-status">File</th>
+                                            <th scope="col" class="read-status">File ID</th>
+                                            <th scope="col" class="read-status">Global ID</th>
+                                            <th scope="col" class="read-status">Circle</th>
+                                            <th scope="col" class="read-status">Site_Name</th>
+                                            <th scope="col" class="read-status">Cluster</th>
+                                            <th scope="col" class="read-status">Region</th>
+                                            <th scope="col" style="min-width: 150px;">User Name</th>
+                                            <th scope="col" class="read-status">Assign Date</th>
+                                            <th scope="col" class="read-status">Status</th>
+                                            <th scope="col" style="min-width: 200px;">Previous Reading Date Time
+                                            </th>
+                                            <th scope="col" style="min-width: 150px;">Current Reading Date Time
+                                            </th>
+                                            <th scope="col" style="min-width: 200px;">Previous EB Cumulative KWH
+                                                As Per EB Meter</th>
+                                            <th scope="col" style="min-width: 200px;">Current EB Cumulative KWH
+                                                As Per EB Meter</th>
+                                            <th scope="col" style="min-width: 300px;">Previous EB Running Hours
+                                                Cumulative Available Not Available</th>
+                                            <th scope="col" style="min-width: 300px;">Current EB Running Hours
+                                                Cumulative Available Not Available</th>
+                                            <th scope="col" style="min-width: 300px;">Previous EB Running Hours
+                                                Cumulative As per PIU I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 300px;">Current EB Running Hours
+                                                Cumulative As per PIU I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 200px;">Previous Type of DG Static
+                                                Mobile</th>
+                                            <th scope="col" style="min-width: 200px;">Current Type of DG Static
+                                                Mobile</th>
+                                            <th scope="col" style="min-width: 200px;">Previous DG Running Hours
+                                                Reading As Per HMR</th>
+                                            <th scope="col" style="min-width: 200px;">Current DG Running Hours
+                                                Reading As Per HMR</th>
+                                            <th scope="col" style="min-width: 300px;">Previous DG Running Hours
+                                                Reading As Per PIU I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 300px;">Current DG Running Hours
+                                                Reading As Per PIU I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 280px;">Previous Opening Diesel
+                                                stock Before Filling</th>
+                                            <th scope="col" style="min-width: 150px;">Current Opening Diesel
+                                                stock Before Filling</th>
+                                            <th scope="col" style="min-width: 100px;">Previous Filled Ltrs</th>
+                                            <th scope="col" style="min-width: 150px;">Current Filled Ltrs</th>
+                                            <th scope="col" style="min-width: 150px;">Previous Diesel Bill
+                                                Number</th>
+                                            <th scope="col" style="min-width: 100px;">Current Diesel Bill Number
+                                            </th>
+                                            <th scope="col" style="min-width: 150px;">Previous Remarks If any
+                                            </th>
+                                            <th scope="col" style="min-width: 150px;">Current Remarks If any
+                                            </th>
+                                            <th scope="col" style="min-width: 250px;">No of days since previous
+                                                filling</th>
+                                            <th scope="col" style="min-width: 150px;">Calculated CPH HMR</th>
+                                            <th scope="col" style="min-width: 200px;">Calculated CPH As per PIU
+                                                I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 100px;">Calculated DG HR HMR</th>
+                                            <th scope="col" style="min-width: 200px;">Calculated DG HR As per
+                                                PIU I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 200px;">Calculated EB KWH As per
+                                                Meter</th>
+                                            <th scope="col" style="min-width: 200px;">Calculated EB HR As per
+                                                PIU I2PMS AMF</th>
+                                            <th scope="col" style="min-width: 200px;">Deviation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-fkift6t">
+                                        {% for feul in fuel_report %}
+                                        <tr class="table-dt-data">
+                                            <td>
+                                                <a href="{{feul.file.url}}" style="text-decoration: none;"
+                                                    target="_blank">
+                                                    <img src="{% static 'app/img/pdf-img.png' %}" alt="pdf" height="30"
+                                                        width="30">
+                                                </a>
+                                            </td>
+                                            <td>{{feul.File_id}}</td>
+                                            <td>{{feul.Global_ID}}</td>
+                                            <td>{{feul.Circle}}</td>
+                                            <td>{{feul.Site_Name}}</td>
+                                            <td>{{feul.Cluster}}</td>
+                                            <td>{{feul.Region}}</td>
+                                            <td>{{feul.User_Name}}</td>
+                                            <td>{{feul.Assign_Date}}</td>
+                                            <td>{{feul.Status}}</td>
+                                            <td>{{feul.Previous_Reading_Date_Time}}</td>
+                                            <td>{{feul.Current_Reading_Date_Time}}</td>
+                                            <td>{{feul.Previous_EB_Cumulative_KWH_As_Per_EB_Meter}}</td>
+                                            <td>{{feul.Current_EB_Cumulative_KWH_As_Per_EB_Meter}}</td>
+                                            <td>{{feul.Previous_EB_Running_Hours_Cumulative_Available_Not_Available}}
+                                            </td>
+                                            <td>{{feul.Current_EB_Running_Hours_Cumulative_Available_Not_Available}}
+                                            </td>
+                                            <td>{{feul.Previous_EB_Running_Hours_Cumulative_As_per_PIU_I2PMS_AMF}}
+                                            </td>
+                                            <td>{{feul.Current_EB_Running_Hours_Cumulative_As_per_PIU_I2PMS_AMF}}
+                                            </td>
+                                            <td>{{feul.Previous_Type_of_DG_Static_Mobile}}</td>
+                                            <td>{{feul.Current_Type_of_DG_Static_Mobile}}</td>
+                                            <td>{{feul.Previous_DG_Running_Hours_Reading_As_Per_HMR}}</td>
+                                            <td>{{feul.Current_DG_Running_Hours_Reading_As_Per_HMR}}</td>
+                                            <td>{{feul.Previous_DG_Running_Hours_Reading_As_Per_PIU_I2PMS_AMF}}
+                                            </td>
+                                            <td>{{feul.Current_DG_Running_Hours_Reading_As_Per_PIU_I2PMS_AMF}}
+                                            </td>
+                                            <td>{{feul.Previous_Opening_Diesel_stock_Before_Filling}}</td>
+                                            <td>{{feul.Current_Opening_Diesel_stock_Before_Filling}}</td>
+                                            <td>{{feul.Previous_Filled_Ltrs}}</td>
+                                            <td>{{feul.Current_Filled_Ltrs}}</td>
+                                            <td>{{feul.Previous_Diesel_Bill_Number}}</td>
+                                            <td>{{feul.Current_Diesel_Bill_Number}}</td>
+                                            <td>{{feul.Previous_Remarks_If_any}}</td>
+                                            <td>{{feul.Current_Remarks_If_any}}</td>
+                                            <td>{{feul.No_of_days_since_previous_filling}}</td>
+                                            <td>{{feul.Calculated_CPH_HMR}}</td>
+                                            <td>{{feul.Calculated_CPH_As_per_PIU_I2PMS_AMF}}</td>
+                                            <td>{{feul.Calculated_DG_HR_HMR}}</td>
+                                            <td>{{feul.Calculated_DG_HR_As_per_PIU_I2PMS_AMF}}</td>
+                                            <td>{{feul.Calculated_EB_KWH_As_per_Meter}}</td>
+                                            <td>{{feul.Calculated_EB_HR_As_per_PIU_I2PMS_AMF}}</td>
+                                            <td>{{feul.Deviation}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <div class="mt-5 pt-5 text-center">
+                                    <h6 class="fw-5 text-secondary">No Energy Filling FSR Report</h6>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="pagifbgt mt-4">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        {% if fuel_report.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link text-secondary"
+                                                href="?page={{fuel_report.previous_page_number}}">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        <li class="page-item"><a
+                                                class="page-link text-secondary">{{fuel_report.number}}</a>
+                                        </li>
+                                        {% if fuel_report.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link text-secondary"
+                                                href="?page={{fuel_report.next_page_number}}">
+                                                <span aria-hidden="true">&raquo;</span></a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'app/offcanvas_down.html' %}
+        <!-- Hidden Table -->
+        <div class="hide-dfr-data">
+            {% if all_fsr_data %}
+            <table class="table dt-table hidden-reading-table">
+                <thead>
+                    <tr class="table-head">
+                        <th scope="col" class="read-status">File</th>
+                        <th scope="col" class="read-status">File ID</th>
+                        <th scope="col" class="size-expand">Global ID</th>
+                        <th scope="col" class="read-status">Circle</th>
+                        <th scope="col" class="read-status">Site_Name</th>
+                        <th scope="col" class="read-status">Cluster</th>
+                        <th scope="col" class="read-status">Region</th>
+                        <th scope="col" style="min-width: 150px;">User Name</th>
+                        <th scope="col" class="read-status">Assign Date</th>
+                        <th scope="col" class="read-status">Status</th>
+                        <th scope="col" style="min-width: 200px;">Previous Reading Date Time</th>
+                        <th scope="col" style="min-width: 150px;">Current Reading Date Time</th>
+                        <th scope="col" style="min-width: 150px;">Previous EB Cumulative KWH As Per EB Meter</th>
+                        <th scope="col" style="min-width: 150px;">Current EB Cumulative KWH As Per EB Meter</th>
+                        <th scope="col" style="min-width: 150px;">Previous EB Running Hours Cumulative Available Not
+                            Available</th>
+                        <th scope="col" style="min-width: 200px;">Current EB Running Hours Cumulative Available Not
+                            Available</th>
+                        <th scope="col" style="min-width: 150px;">Previous EB Running Hours Cumulative As per PIU I2PMS
+                            AMF</th>
+                        <th scope="col" style="min-width: 200px;">Current EB Running Hours Cumulative As per PIU I2PMS
+                            AMF</th>
+                        <th scope="col" style="min-width: 200px;">Previous Type of DG Static Mobile</th>
+                        <th scope="col" style="min-width: 150px;">Current Type of DG Static Mobile</th>
+                        <th scope="col" style="min-width: 150px;">Previous DG Running Hours Reading As Per HMR</th>
+                        <th scope="col" style="min-width: 150px;">Current DG Running Hours Reading As Per HMR</th>
+                        <th scope="col" style="min-width: 200px;">Previous DG Running Hours Reading As Per PIU I2PMS AMF
+                        </th>
+                        <th scope="col" style="min-width: 150px;">Current DG Running Hours Reading As Per PIU I2PMS AMF
+                        </th>
+                        <th scope="col" style="min-width: 280px;">Previous Opening Diesel stock Before Filling</th>
+                        <th scope="col" style="min-width: 150px;">Current Opening Diesel stock Before Filling</th>
+                        <th scope="col" style="min-width: 100px;">Previous Filled Ltrs</th>
+                        <th scope="col" style="min-width: 150px;">Current Filled Ltrs</th>
+                        <th scope="col" style="min-width: 150px;">Previous Diesel Bill Number</th>
+                        <th scope="col" style="min-width: 100px;">Current Diesel Bill Number</th>
+                        <th scope="col" style="min-width: 150px;">Previous Remarks If any</th>
+                        <th scope="col" style="min-width: 150px;">Current Remarks If any</th>
+                        <th scope="col" style="min-width: 250px;">No of days since previous filling</th>
+                        <th scope="col" style="min-width: 150px;">Calculated CPH HMR</th>
+                        <th scope="col" style="min-width: 280px;">Calculated CPH As per PIU I2PMS AMF</th>
+                        <th scope="col" style="min-width: 100px;">Calculated DG HR HMR</th>
+                        <th scope="col" style="min-width: 100px;">Calculated DG HR As per PIU I2PMS AMF</th>
+                        <th scope="col" style="min-width: 100px;">Calculated EB KWH As per Meter</th>
+                        <th scope="col" style="min-width: 100px;">Calculated EB HR As per PIU I2PMS AMF</th>
+                        <th scope="col" style="min-width: 100px;">Deviation</th>
+                    </tr>
+                </thead>
+                <tbody id="report-fkift6t">
+                    {% for feul in all_fsr_data %}
+                    <tr class="table-dt-data">
+                        <td>{{feul.file}}</td>
+                        <td>{{feul.File_id}}</td>
+                        <td>{{feul.Global_ID}}</td>
+                        <td>{{feul.Circle}}</td>
+                        <td>{{feul.Site_Name}}</td>
+                        <td>{{feul.Cluster}}</td>
+                        <td>{{feul.Region}}</td>
+                        <td>{{feul.User_Name}}</td>
+                        <td>{{feul.Assign_Date}}</td>
+                        <td>{{feul.Status}}</td>
+                        <td>{{feul.Previous_Reading_Date_Time}}</td>
+                        <td>{{feul.Current_Reading_Date_Time}}</td>
+                        <td>{{feul.Previous_EB_Cumulative_KWH_As_Per_EB_Meter}}</td>
+                        <td>{{feul.Current_EB_Cumulative_KWH_As_Per_EB_Meter}}</td>
+                        <td>{{feul.Previous_EB_Running_Hours_Cumulative_Available_Not_Available}}</td>
+                        <td>{{feul.Current_EB_Running_Hours_Cumulative_Available_Not_Available}}</td>
+                        <td>{{feul.Previous_EB_Running_Hours_Cumulative_As_per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Current_EB_Running_Hours_Cumulative_As_per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Previous_Type_of_DG_Static_Mobile}}</td>
+                        <td>{{feul.Current_Type_of_DG_Static_Mobile}}</td>
+                        <td>{{feul.Previous_DG_Running_Hours_Reading_As_Per_HMR}}</td>
+                        <td>{{feul.Current_DG_Running_Hours_Reading_As_Per_HMR}}</td>
+                        <td>{{feul.Previous_DG_Running_Hours_Reading_As_Per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Current_DG_Running_Hours_Reading_As_Per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Previous_Opening_Diesel_stock_Before_Filling}}</td>
+                        <td>{{feul.Current_Opening_Diesel_stock_Before_Filling}}</td>
+                        <td>{{feul.Previous_Filled_Ltrs}}</td>
+                        <td>{{feul.Current_Filled_Ltrs}}</td>
+                        <td>{{feul.Previous_Diesel_Bill_Number}}</td>
+                        <td>{{feul.Current_Diesel_Bill_Number}}</td>
+                        <td>{{feul.Previous_Remarks_If_any}}</td>
+                        <td>{{feul.Current_Remarks_If_any}}</td>
+                        <td>{{feul.No_of_days_since_previous_filling}}</td>
+                        <td>{{feul.Calculated_CPH_HMR}}</td>
+                        <td>{{feul.Calculated_CPH_As_per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Calculated_DG_HR_HMR}}</td>
+                        <td>{{feul.Calculated_DG_HR_As_per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Calculated_EB_KWH_As_per_Meter}}</td>
+                        <td>{{feul.Calculated_EB_HR_As_per_PIU_I2PMS_AMF}}</td>
+                        <td>{{feul.Deviation}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'app/js/style.js' %}"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#search_data_fuel_drawn").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#report-fkift6t tr").filter(function () {
+                    $(this).toggle($(this).text()
+                        .toLowerCase().indexOf(value) > -1)
+                });
+            });
+        }); 
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#btn-download-id").click(function () {
+                let table = document.getElementsByClassName("hidden-reading-table");
+                TableToExcel.convert(table[0], {
+                    name: `Diesel_Filling_FSR_Report.xlsx`,
+                    sheet: {
+                        name: 'Diesel Filling FSR Report'
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

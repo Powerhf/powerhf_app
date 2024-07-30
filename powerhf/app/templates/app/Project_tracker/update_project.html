@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>PowerHF • Project Tracking Add / Update</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="card border-0 right-middel-card mt-4 mb-5">
+                    <div class="mt-4 mb-3">
+                        {% if messages %}
+                        {% for msg in messages %}
+                        <div class="card {{msg.tags}} mb-5 p-2" id="Error-close"
+                            style="margin-left: 0.8rem; margin-right: 1.5rem;">
+                            <div class="d-flex">
+                                <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
+                                    <span>{{msg}}</span>
+                                </div>
+                                <div class="inr-success-int2">
+                                    <button class="btn-close-err-msg" id="btncloseerrmsg" onclick="BtnErrorClose()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"
+                                            class="text-dark">
+                                            <path fill="#545454"
+                                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="p-2">
+                                <h6>Project Info</h6>
+                            </div>
+                            <div class="row row-cols-3 row-cols-md-5 g-3 mb-3 p-2">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Customer <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.customer}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Project Type <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.project_type}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Site ID <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.site_id}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Site Name <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.site_name}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Customer Expected Target Date <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        {% if projects_data.customer_expected_target_date == None %}
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-danger">Not Provided</h6>
+                                        {% else %}
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.customer_expected_target_date | date:"d M Y"}}</h6>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Assigned to ASM <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.assigned_to_asm}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Sales Remarks <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.sales_remark}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Project Description <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Sales)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">{{projects_data.project_description}}</h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Assigned To Technician <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(ASM)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">
+                                            {% if projects_data.assigned_to_technician == None or projects_data.assigned_to_technician == '' %}
+                                            <span class="text-danger" style="font-size: 10px;">Pending</span>
+                                            {% else %}
+                                            {{projects_data.assigned_to_technician}}
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Technician Target Date <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(ASM)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">
+                                            {% if projects_data.assigned_to_technician == None and projects_data.asm_remarks == None %}
+                                            <span class="text-danger">Pending</span>
+                                            {% elif projects_data.assigned_to_technician == '' and projects_data.asm_remarks == '' %}
+                                            <span class="text-danger">Pending</span>
+                                            {% elif projects_data.technician_target_date == None %}
+                                            <span class="text-danger">Not Provided</span>
+                                            {% else %}
+                                            {{projects_data.technician_target_date}}
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">ASM Remarks <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(ASM)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">
+                                            {% if projects_data.asm_remarks == None or projects_data.asm_remarks == '' %}
+                                            <span class="text-danger" style="font-size: 10px;">Pending</span>
+                                            {% else %}
+                                            {{projects_data.asm_remarks}}
+                                            {% endif %}                                            
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Project Status <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Technician)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">
+                                            {% if projects_data.project_status == None or projects_data.project_status == '' %}
+                                            <span class="text-danger" style="font-size: 10px;">Pending</span>
+                                            {% else %}
+                                            {% if projects_data.project_status == 'Not Started' %}
+                                            <span class="text-warning">{{projects_data.project_status}}</span>
+                                            {% elif projects_data.project_status == 'In Progress' %}
+                                            <span class="text-success">{{projects_data.project_status}}</span>
+                                            {% elif projects_data.project_status == 'Complete' %}
+                                            <span class="text-info">{{projects_data.project_status}}</span>
+                                            {% endif %}
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Completed Date <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Technician)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">
+                                            {% if projects_data.project_status == 'Not Started' and projects_data.technician_remarks == None  %}
+                                            <span class="text-danger" style="font-size: 10px;">Pending</span>
+                                            {% elif projects_data.project_status == 'Not Started' and projects_data.technician_remarks == ''  %}
+                                            <span class="text-danger" style="font-size: 10px;">Pending</span>
+                                            {% elif projects_data.completed_date == None or projects_data.completed_date == '' %}
+                                            <span class="text-danger" style="font-size: 10px;">Not Provided</span>
+                                            {% else %}
+                                            {{projects_data.completed_date}}
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label class="mb-2 label_input" style="font-size: 10px;">Technician Remarks <span class="text-secondary" style="font-size: 10px; font-weight: 550;">(Technician)</span></label>
+                                        <h6 style="font-size: 12px; font-weight: 550;" class="text-secondary">
+                                            {% if projects_data.technician_remarks == None or projects_data.technician_remarks == '' %}
+                                            <span class="text-danger" style="font-size: 10px;">Pending</span>
+                                            {% else %}
+                                            {{projects_data.technician_remarks}}
+                                            {% endif %}
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-2">
+                                <h6>Project Updation</h6>
+                            </div>
+                            <div class="form-update-4f443f">
+                                {% if request.user.role == 'Sales' %}
+                                <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
+                                    {% csrf_token %}
+                                    <div class="erger-56ty">
+                                        <div class="sales_team_dt_forms">
+                                            <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Customer</label>
+                                                        <select class="inputformsfill" name="sales_customer_name_dt">
+                                                            {% for cust in customers_data %}
+                                                            <option value="{{cust.customers}}" {% if instance.customer == cust.customers %}selected{% endif %}>{{cust.customers}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Project Type</label>
+                                                        <select class="inputformsfill" name="sales_project_types_dt">
+                                                            {% for projects in projects_types %}
+                                                            <option value="{{projects.project_type}}" {% if instance.project_type == projects.project_type %}selected{% endif %}>{{projects.project_type}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Site ID</label>
+                                                        <input type="text" class="inputformsfill" name="sales_site_id_dt" value="{{instance.site_id}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Site Name</label>
+                                                        <input type="text" class="inputformsfill" name="sales_site_name_dt" value="{{instance.site_name}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Customer Expected Target Date</label>
+                                                        <input type="date" class="inputformsfill" name="sales_customer_expected_date_dt" value="{{instance.customer_expected_target_date | date:"Y-m-d"}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Assigned to ASM</label>
+                                                        <select class="inputformsfill" name="sales_assigned_to_asm_id_dt">
+                                                            {% for asm in ASM_data %}
+                                                            <option value="{{asm.first_name}} {{asm.last_name}}" {% if instance.assigned_to_asm == asm.first_name|add:" "|add:asm.last_name %}selected{% endif %}>{{asm.first_name}} {{asm.last_name}}
+                                                            </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Sales Remarks</label>
+                                                        <input type="text" class="inputformsfill" name="sales_remarks_dt" value="{{instance.sales_remark}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Project Description</label>
+                                                        <textarea name="sales_project_discreption_dt" class="text-box_project_track">{{instance.project_description}}</textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="hidden_dt" value="Sales_data">
+                                    <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
+                                        <button type="submit" class="btn-filling_data" id="submit_btn">
+                                            <span id="gj7uj86">Submit</span>
+                                            <div id="loading-bar" style="display: none;">
+                                                <div class="spinner-border spinner-border-sm text-light" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </form>
+                                {% elif request.user.role == 'ASM' %}
+                                <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
+                                    {% csrf_token %}
+                                    <div class="erger-56ty">
+                                        <div class="ASM_team_dt_forms">
+                                            <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Assigned To Technician</label>
+                                                        <select class="inputformsfill" name="asm_Technician_name_dt">
+                                                            <option value="">-------</option>
+                                                            {% for tech_n in Technician_data %}
+                                                            <option value="{{tech_n.first_name}} {{tech_n.last_name}}" {% if instance.assigned_to_technician == tech_n.first_name|add:" "|add:tech_n.last_name %}selected{% endif %}>
+                                                                {{tech_n.first_name}} {{tech_n.last_name}}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Technician Target Date</label>
+                                                        <input type="date" class="inputformsfill" name="asm_technician_target_date_dt" value="{{instance.technician_target_date|date:"Y-m-d"}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">ASM Remarks</label>
+                                                        <input type="text" class="inputformsfill" name="asm_technician_remarks_dt" value="{{instance.asm_remarks}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="hidden_dt" value="ASM_data">
+                                    <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
+                                        <button type="submit" class="btn-filling_data" id="submit_btn">
+                                            <span id="gj7uj86">Submit</span>
+                                            <div id="loading-bar" style="display: none;">
+                                                <div class="spinner-border spinner-border-sm text-light" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </form>
+                                {% elif request.user.role == 'Technician' %}
+                                <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
+                                    {% csrf_token %}
+                                    <div class="erger-56ty">                                
+                                        <div class="Teachcian_team_dt_forms">
+                                            <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Project Status</label>
+                                                        <select class="inputformsfill" name="technicians_project_status_dt">
+                                                            <option value="Not Started" {% if instance.project_status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                                            <option value="In Progress" {% if instance.project_status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                                            <option value="Complete" {% if instance.project_status == 'Complete' %}selected{% endif %}>Complete</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Completed Date</label>
+                                                        <input type="date" class="inputformsfill" name="technicians_completed_date_dt" value="{{instance.completed_date | date:'Y-m-d'}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="mb-3">
+                                                        <label class="mb-2 label_input">Technician Remarks</label>
+                                                        <input type="text" class="inputformsfill" name="technician_last_remarks_dt" value="{{instance.technician_remarks}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="hidden_dt" value="technicians_data">
+                                    <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
+                                        <button type="submit" class="btn-filling_data" id="submit_btn">
+                                            <span id="gj7uj86">Submit</span>
+                                            <div id="loading-bar" style="display: none;">
+                                                <div class="spinner-border spinner-border-sm text-light" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% include 'app/offcanvas_down.html' %}
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"></script>
+        <script src="{% static 'app/js/style.js' %}"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#myForm').submit(function () {
+                    $(".btn-filling_data").prop("disabled", true);
+                    $('#loading-bar').show();
+                    $('#gj7uj86').hide();
+                });
+            });
+        </script>
+        <script>
+            // In your Javascript
+            $(document).ready(function () {
+                $('.js-example-basic-single').select2();
+            });
+        </script>
+        <script>
+            document.onreadystatechange = function () {
+                if (document.readyState !== "complete") {
+                    document.querySelector(
+                        "body").style.visibility = "hidden";
+                    document.querySelector(
+                        "#loader").style.visibility = "visible";
+                } else {
+                    document.querySelector(
+                        "#loader").style.display = "none";
+                    document.querySelector(
+                        "body").style.visibility = "visible";
+                }
+            };
+        </script>
+</body>
+
+</html>

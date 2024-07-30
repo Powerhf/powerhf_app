@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>PowerHF • Project Tracking Complete</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="mt-4 mb-5">
+                    <div class="mt-4 mb-3">
+                        {% if messages %}
+                        {% for msg in messages %}
+                        <div class="card {{msg.tags}} mb-5 p-2" id="Error-close"
+                            style="margin-left: 0.8rem; margin-right: 1.5rem;">
+                            <div class="d-flex">
+                                <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
+                                    <span>{{msg}}</span>
+                                </div>
+                                <div class="inr-success-int2">
+                                    <button class="btn-close-err-msg" id="btncloseerrmsg" onclick="BtnErrorClose()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"
+                                            class="text-dark">
+                                            <path fill="#545454"
+                                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <div class="inner-table">
+                            <div class="fhy865">
+                                <div class="d-flex">
+                                    <a href="{% url 'projectTrackingform' %}" class="list-dt-energy">Pendings ({{pendings_counts}})</a>
+                                </div>
+                                <div class="d-flex bdr-k8iu">
+                                    <a href="{% url 'projectTrackingcomplete' %}"
+                                        class="list-dt-energy col-r6t">Completed ({{completes_counts}})</a>
+                                </div>
+                            </div>
+                            <div class="innerderf mt-3">
+                                {% if projects_data %}
+                                <table class="table dt-table">
+                                    <thead>
+                                        <tr class="table-head">
+                                            <th colspan="9" scope="col" class="read-status"
+                                                style="background-color: #e7e7e7;">Sales Team</th>
+                                            <th colspan="3" scope="col" class="read-status"
+                                                style="background-color: #e7e7e7;">ASM</th>
+                                            <th colspan="3" scope="col" class="read-status"
+                                                style="background-color: #e7e7e7;">Technician</th>
+                                        </tr>
+                                        <tr class="table-head">
+                                            <th scope="col" class="read-status" style="background-color: #eeeeee;">Site
+                                                ID</th>
+                                            <th scope="col" class="read-status" style="background-color: #eeeeee;">Site
+                                                Name</th>
+                                            <th scope="col" class="read-status" style="background-color: #eeeeee;">
+                                                Created By</th>
+                                            <th scope="col" class="read-status" style="background-color: #eeeeee;">
+                                                Customer</th>
+                                            <th scope="col" style="min-width: 180px; background-color: #eeeeee;">Project
+                                                Type</th>
+                                            <th scope="col" style="min-width: 230px; background-color: #eeeeee;">
+                                                Customer Expected Target Date</th>
+                                            <th scope="col" style="min-width: 130px; background-color: #eeeeee;">
+                                                Assigned to ASM</th>
+                                            <th scope="col" class="read-status" style="background-color: #eeeeee;">Sales
+                                                Remark</th>
+                                            <th scope="col" style="min-width: 180px; background-color: #eeeeee;">Project
+                                                Description</th>
+                                            <th scope="col" style="min-width: 180px; background-color: #eeeeee;">
+                                                Assigned To Technician</th>
+                                            <th scope="col" style="min-width: 180px; background-color: #eeeeee;">
+                                                Technician Target Date</th>
+                                            <th scope="col" style="min-width: 150px; background-color: #eeeeee;">ASM
+                                                Remarks</th>
+                                            <th scope="col" style="min-width: 150px; background-color: #eeeeee;">Project
+                                                Status</th>
+                                            <th scope="col" style="min-width: 150px; background-color: #eeeeee;">
+                                                Completed Date</th>
+                                            <th scope="col" style="min-width: 150px; background-color: #eeeeee;">
+                                                Technician Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-fkift6t">
+                                        {% for project in projects_data %}
+                                        <tr class="table-dt-data">
+                                            <td>{{project.site_id}}</td>
+                                            <td>{{project.site_name}}</td>
+                                            <td>{{project.user.first_name}} {{project.user.last_name}}</td>
+                                            <td>{{project.customer}}</td>
+                                            <td>{{project.project_type}}</td>
+                                            <td>{{project.customer_expected_target_date | date:"d M Y"}}</td>
+                                            <td>{{project.assigned_to_asm}}</td>
+                                            <td>{{project.sales_remark}}</td>
+                                            <td>{{project.project_description}}</td>
+                                            <td>
+                                                {% if project.assigned_to_technician == None %}
+                                                <span>_</span>
+                                                {% else %}
+                                                {{project.assigned_to_technician}}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if project.technician_target_date == None %}
+                                                <span>_</span>
+                                                {% else %}
+                                                {{project.technician_target_date | date:"d M Y"}}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if project.asm_remarks == None %}
+                                                <span>_</span>
+                                                {% else %}
+                                                {{project.asm_remarks}}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if project.project_status == None %}
+                                                <span>_</span>
+                                                {% else %}
+                                                {% if project.project_status == 'Not Started' %}
+                                                <span class="text-warning" style="font-weight: 550;">{{project.project_status}}</span>
+                                                {% elif project.project_status == 'In Progress' %}
+                                                <span class="text-success" style="font-weight: 550;">{{project.project_status}}</span>
+                                                {% elif project.project_status == 'Complete' %}
+                                                <span class="text-info" style="font-weight: 550;">{{project.project_status}}</span>
+                                                {% endif %}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if project.completed_date == None %}
+                                                <span>_</span>
+                                                {% else %}
+                                                {{project.completed_date | date:"d M Y"}}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if project.technician_remarks == None %}
+                                                <span>_</span>
+                                                {% else %}
+                                                {{project.technician_remarks}}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <div class="mt-5 pt-5 text-center">
+                                    <h6 class="fw-5 text-secondary">No Completes</h6>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="pagifbgt mt-4">
+                                {% if projects_data %}
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        {% if projects_data.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link text-secondary"
+                                                href="?page={{projects_data.previous_page_number}}">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        <li class="page-item"><a
+                                                class="page-link text-secondary">{{projects_data.number}}</a>
+                                        </li>
+                                        {% if projects_data.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link text-secondary"
+                                                href="?page={{projects_data.next_page_number}}">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'app/offcanvas_down.html' %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'app/js/style.js' %}"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myForm').submit(function () {
+                $(".btn-filling_data").prop("disabled", true);
+                $('#loading-bar').show();
+                $('#gj7uj86').hide();
+            });
+        });
+    </script>
+    <script>
+        // In your Javascript
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
+</body>
+
+</html>

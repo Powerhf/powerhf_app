@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <title>PowerHF • Energy Fuel Drawn</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="card right-middel-card expand-table border-0 mt-4">
+                    <div class="headings fh7y_u8y">
+                        <div style="margin-left: 15px; margin-right: 15px; margin-top: 10px;">
+                            <div class="row row-cols-1 row-cols-md-2 g-2">
+                                <div class="col-md-6">
+                                    <h5 class="fw-normal">Reports (Energy)</h5>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    {% if all_fuel_drawn_data %}
+                                    <button type="button" id="btn-download-id" class="bg-secondary btn-downloadall">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12"
+                                            style="margin-bottom: 4px;" viewBox="0 0 512 512">
+                                            <path fill="#ffffff"
+                                                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
+                                        </svg>
+                                        Download all
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="filter-reports mt-4">
+                            <div class="hfy-ty665">
+                                <div class="outer-7yt">
+                                    <input type="text" id="search_data_fuel_drawn" name="search_name"
+                                        class="inputformsfill" placeholder="Search your data"
+                                        style="width: 250px; margin-left: 1rem; margin-right: 2rem;">
+                                </div>
+                                <form action="{% url 'fuel_drawn_filter' %}" method="GET">
+                                    <div class="inner-filters">
+                                        <input type="date" id="date_df1" name="start_date"
+                                            class="inputformsfill dateFilter" style="width: 200px; margin-left: 1rem;">
+
+                                        <span style="margin-left: 10px;margin-right: 10px;">To</span>
+
+                                        <input type="date" id="date_df2" name="end_date"
+                                            class="inputformsfill dateFilter" style="width: 200px;margin-right: 10px;">
+
+                                        <input type="submit" class="btn_filter_dt bg-secondary" value="Show">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="inner-table mt-3">
+                            <div class="fhy865">
+                                <div class="d-flex">
+                                    <a href="{% url 'atc_site_report' %}" class="list-dt-energy">DFR</a>
+                                </div>
+                                <div class="d-flex bdr-k8iu">
+                                    <a href="{% url 'fuel_drawn' %}" class="list-dt-energy col-r6t">Fuel Drawn</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'diesel_filling' %}" class="list-dt-energy">Energy
+                                        Reading</a>
+                                </div>
+                                <div class="d-flex">
+                                    <a href="{% url 'diese_filling_fsr_report' %}" class="list-dt-energy">Diesel Filling FSR</a>
+                                </div>
+                            </div>
+                            <div class="innerderf mt-3">
+                                {% if fuel_drawn %}
+                                <table class="table dt-table">
+                                    <thead>
+                                        <tr class="table-head">
+                                            <th scope="col" style="min-width: 150px;">FT ID</th>
+                                            <th scope="col" style="min-width: 150px;">FT Name</th>
+                                            <th scope="col" style="min-width: 150px;">FT Mobile No.</th>
+                                            <th scope="col" style="min-width: 150px;">Cluster Name</th>
+                                            <th scope="col" style="min-width: 150px;">Fuel Drawn Date</th>
+                                            <th scope="col" style="min-width: 150px;">Card No.</th>
+                                            <th scope="col" style="min-width: 200px;">City Township Fuel Station
+                                            </th>
+                                            <th scope="col" style="min-width: 200px;">Customer</th>
+                                            <th scope="col" style="min-width: 200px;">Fuel Station Name</th>
+                                            <th scope="col" style="min-width: 200px;">Diesel Purchased Qty</th>
+                                            <th scope="col" style="min-width: 200px;">Diesel Per Ltr Cost Rs
+                                            </th>
+                                            <th scope="col" style="min-width: 200px;">Total Diesel Cost Rs</th>
+                                            <th scope="col" style="min-width: 200px;">Receipt No.</th>
+                                            <th scope="col" style="min-width: 250px;">Receipt Image Upload</th>
+                                            <th scope="col" style="min-width: 200px;">Vehicle Plate</th>
+                                            <th scope="col" style="min-width: 200px;">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-fkift6t">
+                                        {% for feul in fuel_drawn %}
+                                        <tr class="table-dt-data">
+                                            <td>{{feul.FT_ID}}</td>
+                                            <td>{{feul.FT_name}}</td>
+                                            <td>{{feul.FT_mobile_no}}</td>
+                                            <td>{{feul.Cluster_Name}}</td>
+                                            <td>{{feul.Fuel_Drawn_Date | date:"d M Y"}}</td>
+                                            <td>{{feul.Card_No}}</td>
+                                            <td>{{feul.City_Township_Fuel_Station}}</td>
+                                            <td>{{feul.Customer}}</td>
+                                            <td>{{feul.Fuel_Station_Name}}</td>
+                                            <td>{{feul.Diesel_Purchased_Qty}}</td>
+                                            <td>{{feul.Diesel_Per_Ltr_Cost_Rs}}</td>
+                                            <td>{{feul.Total_Diesel_Cost_Rs}}</td>
+                                            <td>{{feul.Receipt_No}}</td>
+                                            <td>
+                                                {% if feul.Receipt_Image_Upload != '' %}
+                                                <a href="{{feul.Receipt_Image_Upload.url}}" target="_blank">
+                                                    <img src="{{feul.Receipt_Image_Upload.url}}" height="50px"
+                                                        width="100" alt="{{feul.Receipt_Image_Upload}}">
+                                                </a>
+                                                {% else %}
+                                                No
+                                                {% endif %}
+                                            </td>
+                                            <td>{{feul.Vehicle_Plate}}</td>
+                                            <td>{{feul.Remarks}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% else %}
+                                <div class="mt-5 pt-5 text-center">
+                                    <h6 class="fw-5 text-secondary">No Fuel Drawn Report</h6>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="pagifbgt mt-4">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        {% if fuel_drawn.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link text-secondary"
+                                                href="?page={{fuel_drawn.previous_page_number}}">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        <li class="page-item"><a
+                                                class="page-link text-secondary">{{fuel_drawn.number}}</a>
+                                        </li>
+                                        {% if fuel_drawn.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link text-secondary"
+                                                href="?page={{fuel_drawn.next_page_number}}">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'app/offcanvas_down.html' %}
+        <!-- Hidden Table -->
+        <div class="hide-dfr-data">
+            {% if all_fuel_drawn_data %}
+            <table class="table dt-table">
+                <thead>
+                    <tr class="table-head">
+                        <th scope="col" style="min-width: 150px;">FT ID</th>
+                        <th scope="col" style="min-width: 150px;">FT Name</th>
+                        <th scope="col" style="min-width: 150px;">FT Mobile No.</th>
+                        <th scope="col" style="min-width: 150px;">Cluster Name</th>
+                        <th scope="col" style="min-width: 150px;">Fuel Drawn Date</th>
+                        <th scope="col" style="min-width: 150px;">Card No.</th>
+                        <th scope="col" style="min-width: 200px;">City Township Fuel Station
+                        </th>
+                        <th scope="col" style="min-width: 200px;">Customer</th>
+                        <th scope="col" style="min-width: 200px;">Fuel Station Name</th>
+                        <th scope="col" style="min-width: 200px;">Diesel Purchased Qty</th>
+                        <th scope="col" style="min-width: 200px;">Diesel Per Ltr Cost Rs
+                        </th>
+                        <th scope="col" style="min-width: 200px;">Total Diesel Cost Rs</th>
+                        <th scope="col" style="min-width: 200px;">Receipt No.</th>
+                        <th scope="col" style="min-width: 250px;">Receipt Image Upload</th>
+                        <th scope="col" style="min-width: 200px;">Vehicle Plate</th>
+                        <th scope="col" style="min-width: 200px;">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="report-fkift6t">
+                    {% for feul in all_fuel_drawn_data %}
+                    <tr class="table-dt-data">
+                        <td>{{feul.FT_ID}}</td>
+                        <td>{{feul.FT_name}}</td>
+                        <td>{{feul.FT_mobile_no}}</td>
+                        <td>{{feul.Cluster_Name}}</td>
+                        <td>{{feul.Fuel_Drawn_Date | date:"d M Y"}}</td>
+                        <td>{{feul.Card_No}}</td>
+                        <td>{{feul.City_Township_Fuel_Station}}</td>
+                        <td>{{feul.Customer}}</td>
+                        <td>{{feul.Fuel_Station_Name}}</td>
+                        <td>{{feul.Diesel_Purchased_Qty}}</td>
+                        <td>{{feul.Diesel_Per_Ltr_Cost_Rs}}</td>
+                        <td>{{feul.Total_Diesel_Cost_Rs}}</td>
+                        <td>{{feul.Receipt_No}}</td>
+                        <td>
+                            {% if feul.Receipt_Image_Upload != '' %}
+                            <a href="{{feul.Receipt_Image_Upload.url}}" target="_blank">
+                                <img src="{{feul.Receipt_Image_Upload.url}}" height="50px" width="100"
+                                    alt="{{feul.Receipt_Image_Upload}}">
+                            </a>
+                            {% else %}
+                            No
+                            {% endif %}
+                        </td>
+                        <td>{{feul.Vehicle_Plate}}</td>
+                        <td>{{feul.Remarks}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'app/js/style.js' %}"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#search_data_fuel_drawn").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#report-fkift6t tr").filter(function () {
+                    $(this).toggle($(this).text()
+                        .toLowerCase().indexOf(value) > -1)
+                });
+            });
+        }); 
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#btn-download-id").click(function () {
+                let table = document.getElementById("hidden-table");
+                TableToExcel.convert(table[0], {
+                    name: `energy_fuel_drawn_download_data.xlsx`,
+                    sheet: {
+                        name: 'Diesel Reading'
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <title>PowerHF • Log In</title>
+</head>
+
+<body>
+    <div class="container mt-5" style="max-width: 28rem;">
+        <div class="card m-3 pt-3 pb-3 border-0 inner-csdr">
+            <div class="top-logo text-center p-3">
+                <img src="{% static 'app/img/phf-logo.png' %}">
+            </div>
+            <div class="center-part-form p-3 mt-3">
+                <form action="" method="POST" class="d-flex justify-content-center" id="myForm">
+                    {% csrf_token %}
+                    <div class="grtrg">
+                        <div class="col-auto mb-4">
+                            <label class="visually-hidden" for="autoSizingInputGroup">Email</label>
+                            <div class="input-group inpu-upper-dt">
+                                <div class="input-group-text icon-input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                        <path
+                                            d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z" />
+                                    </svg>
+                                </div>
+                                {{forms.username}}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <label class="visually-hidden" for="autoSizingInputGroup">Password</label>
+                            <div class="input-group inpu-upper-dt">
+                                <div class="input-group-text icon-input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                                        <path
+                                            d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" />
+                                    </svg>
+                                </div>
+                                {{forms.password}}
+                            </div>
+                        </div>
+                        {% if forms.non_field_errors %}
+                        <div class="error-feild text-center mt-4">
+                            <p class="text-danger">Please write correct Email Address<br>and Password.</p>
+                        </div>
+                        {% endif %}
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn-signin">
+                                <div class="dhg6yt">
+                                    <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                            class="hgyj">
+                                            <style>
+                                                .hgyj {
+                                                    fill: #ffffff
+                                                }
+                                            </style>
+                                            <path
+                                                d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z" />
+                                        </svg>
+                                    </span>
+                                    <span style="margin-left: 0.3rem;">
+                                        LogIn
+                                    </span>
+                                </div>
+                                <div id="loading-bar" style="display: none;">
+                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>        
+        $(document).ready(function () {
+            $('#myForm').submit(function () {
+                $(".btn-signin").prop( "disabled", true );
+                $('#loading-bar').show();
+                $('.dhg6yt').hide();
+            });
+        });
+    </script>
+</body>
+
+</html>

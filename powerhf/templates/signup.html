@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <title>PowerHF • Registration</title>
+</head>
+
+<body>
+    <div class="container mt-5 mb-5" style="max-width: 28rem;">
+        <div class="card m-3 pt-3 pb-3 border-0 inner-csdr">
+            <div class="top-logo text-center p-3">
+                <img src="{% static 'app/img/phf-logo.png' %}">
+            </div>
+            <div class="center-part-form p-3 mt-3">
+                {% if messages %}
+                <div class="card fhy-8u6ty border-0 mb-5 p-2" id="Error-close">
+                    <div class="d-flex">
+                        {% for msg in messages %}
+                        <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
+                            <span>{{msg}}</span>
+                        </div>
+                        {% endfor %}
+                        <div class="inr-success-int2">
+                            <button class="btn-close-err-msg" id="btncloseerrmsg" onclick="BtnErrorClose()">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512">
+                                    <path
+                                        d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <form action="" method="POST" class="d-flex justify-content-center">
+                    {% csrf_token %}
+                    <div class="ferr-86">
+                        <div class="grtrg">
+                            {% for fm in forms %}
+                            <div class="col-auto mb-4">
+                                <label class="text-secondary" style="font-size: 13px; margin-left: 10px;">{{fm.label}}</label>
+                                {{fm}}
+                                {% if fm.errors|striptags %}
+                                <div class="error-dt">
+                                    <p class="text-danger p-2">{{fm.errors|striptags}}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="text-center mt-5">
+                            <button type="submit" class="btn-signin">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                        <style>
+                                            svg {
+                                                fill: #ffffff
+                                            }
+                                        </style>
+                                        <path
+                                            d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
+                                    </svg>
+                                </span>
+                                <span style="margin-left: 0.3rem;">
+                                    Register
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="card border-0 text-center mt-4">
+                    <span>Go to <a href="{% url 'auth' %}" style="text-decoration: none; color: #4abbbe;">LogIn</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function BtnErrorClose(){
+            document.getElementById("Error-close").style.display = 'none'
+        }        
+    </script>
+</body>
+
+</html>

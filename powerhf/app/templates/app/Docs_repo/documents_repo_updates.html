@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <title>PowerHF • Documents Repository Form</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    {% include 'app/upper_navbar.html' %}
+                </div>
+                <div class="card border-0 right-middel-card mt-4 mb-5 p-3">
+                    <div class="mt-3 mb-3">
+                        <div class="headings mb-5" style="padding-left: 15px;">
+                            <div class="headings mb-4">
+                                <h5 class="fw-normal">PHF Projects Repository</h5>
+                            </div>
+                        </div>
+                        {% if messages %}
+                        {% for msg in messages %}
+                        <div class="card {{msg.tags}} mb-5 p-2" id="Error-close"
+                            style="margin-left: 0.8rem; margin-right: 1.5rem;">
+                            <div class="d-flex">
+                                <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
+                                    <span>{{msg}}</span>
+                                </div>
+                                <div class="inr-success-int2">
+                                    <button class="btn-close-err-msg" id="btncloseerrmsg" onclick="BtnErrorClose()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"
+                                            class="text-dark">
+                                            <path fill="#545454"
+                                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <form action="" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                            <div class="erger-56ty">
+                                <div class="row row-cols-1 row-cols-md-2 g-3 mb-5">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="mb-2 label_input">Project Type</label>
+                                            {{forms.project_type}}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="mb-2 label_input">Region</label>
+                                            {{forms.region}}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="mb-2 label_input">Circles</label>
+                                            {{forms.circles}}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="mb-2 label_input">Site ID / Site Name</label>
+                                            {{forms.site_docs_id}}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="mb-2 label_input">File Category</label>
+                                            {{forms.file_category}}
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="mb-2 label_input">Add Documents</label>
+                                            <input type="file" class="mon-box-img-input" name="documents_dt" multiple
+                                                accept="*/*">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
+                                <button type="submit" class="btn-filling_data" id="submit_btn">
+                                    <span id="gj7uj86">Update</span>
+                                    <div id="loading-bar" style="display: none;">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                        <div class="mb-3 mt-5 p-3">
+                            <h6 style="font-size: 13px; font-weight: 550;" class="mb-5">Documents</h6>
+                            {% if docs_data %}
+                            <div class="gegrtg-5g5f54">
+                                <div class="gergr5 p-0 m-0">
+                                    {% for docs in docs_data %}
+                                    {% if docs.documents.all %}
+                                    {% for do in docs.documents.all %}
+                                    <div class="card border-0 p-3 mb-5" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;">
+                                        <div style="font-size: 13px;">
+                                            <div class="row row-cols-2 row-cols-md-2 g-3">
+                                                <div class="col-md-10">
+                                                    <span style="font-weight: 550;">{{forloop.counter}}. </span>
+                                                    <span style="margin-left: 5px;">
+                                                        <a href="{{do.files.url}}" target="_blank"
+                                                            class="text-decoration-none text-secondary">{{do.file_name}}</a>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-2 text-end">
+                                                    <form
+                                                        action="/documents-repository-delete/{{instance.id}}/{{do.id}}/"
+                                                        method="POST" id="remove_files_id">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="remove_file_btn bg-white border-0">
+                                                            <span id="gj7uj86_remove_files">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="15"
+                                                                    height="15" fill="currentColor"
+                                                                    class="bi bi-trash text-danger" viewBox="0 0 16 16">
+                                                                    <path
+                                                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                                                                    <path
+                                                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+                                                                </svg>
+                                                            </span>
+                                                            <div id="loading-bar_remove_files" style="display: none;">
+                                                                <div class="spinner-border spinner-border-sm text-danger"
+                                                                    role="status">
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="border-top pt-2 mt-3">
+                                            <span style="font-size: 10px; margin-left: 15px; font-weight: 550;">Uploaded
+                                                on {{do.date | date:"d M Y"}}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% else %}
+                                    <div class="no-docs-4f4">
+                                        <h6 class="text-danger mt-4 pt-3 text-center" style="font-size: 10px;">
+                                            No
+                                            Documents
+                                            Attached</h6>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% include 'app/offcanvas_down.html' %}
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"></script>
+        <script src="{% static 'app/js/style.js' %}"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script>
+            document.onreadystatechange = function () {
+                if (document.readyState !== "complete") {
+                    document.querySelector(
+                        "body").style.visibility = "hidden";
+                    document.querySelector(
+                        "#loader").style.visibility = "visible";
+                } else {
+                    document.querySelector(
+                        "#loader").style.display = "none";
+                    document.querySelector(
+                        "body").style.visibility = "visible";
+                }
+            };
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#myForm').submit(function () {
+                    $(".btn-filling_data").prop("disabled", true);
+                    $('#loading-bar').show();
+                    $('#gj7uj86').hide();
+                });
+            });
+        </script>
+</body>
+
+</html>

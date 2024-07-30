@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" class="rounded-circle" href="{% static 'app/img/powerhf-logo-hf.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+    <link rel=”stylesheet” href=”https://use.fontawesome.com/releases/v5.7.0/css/all.css”
+        integrity=”sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ” crossorigin=”anonymous”>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <title>ATC Pre-Monsoon Check list</title>
+</head>
+
+<body>
+    <div id="loader" class="center"></div>
+    <div class="container-fluid p-0">
+        <div class="card border-0 bg-card">
+            <div class="container upper-body-tag p-0" style="width: 100%;">
+                <div class="card border-0 top-card sticky-top">
+                    <div class="card border-0 top-card sticky-top">
+                        {% include 'app/upper_navbar.html' %}
+                    </div>
+                </div>
+                <div class="card border-0 right-middel-card mt-4 mb-5">
+                    <div class="mt-4 mb-3">
+                        <div class="headings mb-5" style="padding-left: 15px;">
+                            <h5 class="fw-normal">ATC Pre-Monsoon Checklist</h5>
+                        </div>
+                        {% if messages %}
+                        {% for msg in messages %}
+                        <div class="card {{msg.tags}} mb-5 p-2" id="Error-close"
+                            style="margin-left: 0.8rem; margin-right: 1.5rem;">
+                            <div class="d-flex">
+                                <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
+                                    <span>{{msg}}</span>
+                                </div>
+                                <div class="inr-success-int2">
+                                    <button class="btn-close-err-msg" id="btncloseerrmsg" onclick="BtnErrorClose()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"
+                                            class="text-white">
+                                            <path fill="#545454"
+                                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        <div id="idby_modal"></div>
+                        <form action="" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
+                            {% csrf_token %}
+                            <div class="erger-56ty">
+                                <div class="containsf7 mb-5">
+                                    <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+                                        <div class="col">
+                                            <label class="mb-2 label_input">Global ID</label><br>
+                                            {{forms.global_id}}
+                                        </div>
+                                    </div>
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>1.</strong>
+                                            How is the Approach of road condition during monsoons. </label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q1_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q1_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q1_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q1_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>2.</strong>
+                                            Is there any possibility of water logging during monsoon.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q2_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q2_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q2_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q2_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>3.</strong>
+                                            Over all Visual inspection of sites, any abnormality in DG, Shelter / ODC,
+                                            Tower foundation. Provide details.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status<span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q3_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q3_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q3_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q3_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>4.</strong>
+                                            Ensure that there is no water leakage through cable entry module (roxtek
+                                            entry), Power/ Earthing cables Entry Points to be properly sealed for the
+                                            DG, Shelter/ ODC.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q4_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q4_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q4_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q4_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>5.</strong>
+                                            Check the condition of the AMF Panel Glass.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q5_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q5_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q5_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q5_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>6.</strong>
+                                            Check for water leakage in meter box and Kit Kat / Fuse Box.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q6_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q6_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q6_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q6_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>7.</strong>
+                                            Check for the availability and connection of the lightning Arrestor (LA) on
+                                            Tower and Transformer.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q7_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q7_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q7_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q7_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>8.</strong>
+                                            Check for the shelter / ODC leakage. </label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q8_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q8_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q8_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q8_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>9.</strong>
+                                            Check for the DG canopy and silencer leakage.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q9_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q9_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q9_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q9_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="containsf7 mb-5">
+                                    <div class="labels-yt6">
+                                        <label for="exampleFormControlInput1" class="form-label"
+                                            style="font-size: 13px;"><strong>10.</strong>
+                                            Check that all earthing cable connectivity of all equipment's till the earth
+                                            pit bus bar.</label>
+                                    </div>
+                                    <div class="input8ghy76">
+                                        <div class="row row-cols-1 row-cols-md-4 g-4">
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Status <span
+                                                        class="text-danger">*</span></label><br>
+                                                {{forms.Q10_Status}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Material
+                                                    Required</label><br>
+                                                {{forms.Q10_Material_Required}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Remarks</label><br>
+                                                {{forms.Q10_Remarks}}
+                                            </div>
+                                            <div class="col">
+                                                <label class="form-label"
+                                                    style="font-size: 13px; margin-left: 3px;">Attachment</label><br>
+                                                {{forms.Q10_Attach}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="button_for_form_filling mt-5 pt-5 pb-3 text-end mb-4"
+                                style="margin-right: 1rem;">
+                                <button type="submit" class="btn-filling_data">
+                                    <span id="gj7uj86">Submit</span>
+                                    <div id="loading-bar" style="display: none;">
+                                        <div class="spinner-border spinner-border-sm text-light" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% include 'app/offcanvas_down.html' %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'app/js/style.js' %}"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myForm').submit(function () {
+                $(".btn-filling_data").prop("disabled", true)
+                $('#loading-bar').show();
+                $('#gj7uj86').hide();
+            });
+        });
+    </script>
+    <script>
+        // In your Javascript
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+{% load static %}
+<div class="right-sidebar-upper">
+    <div class="d-flex">
+        <div class="flex-grow-1">
+            <div class="d-flex align-items-center">
+                <ul class="nav nav-pills first_show_top">
+                    <li class="nav-item">
+                        <a class="nav-link pt-0" aria-current="page" href="/">
+                            <img src="{% static 'app/img/phf-logo.png' %}" height="25" width="100" alt="powerhf-logo">
+                        </a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link user-link-dt" aria-current="page" href="/">Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-link-dt" data-bs-toggle="dropdown" href="#"
+                            role="button" aria-expanded="false">Transactions</a>
+                        <ul class="dropdown-menu menu_by_DT border-0">
+                            <li><a class="dropdown-item" href="{% url 'pm_trans' %}">PM</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'cm_trans' %}">CM</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'atcform' %}">Energy</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'mon_check' %}">PML Checklist</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-link-dt" data-bs-toggle="dropdown" href="#"
+                            role="button" aria-expanded="false">Reports</a>
+                        <ul class="dropdown-menu menu_by_DT border-0">
+                            <li><a class="dropdown-item" href="{% url 'hoto_report' %}">Hoto</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'pm_report' %}">PM</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'cm_report' %}">CM</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'atc_site_report' %}">Energy</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'mon_check_report' %}">PML Checklist</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle user-link-dt" data-bs-toggle="dropdown" href="#"
+                            role="button" aria-expanded="false">Document Repository</a>
+                        <ul class="dropdown-menu menu_by_DT border-0">
+                            <li><a class="dropdown-item" href="{% url 'documentsrepository_form' %}">Upload</a></li>
+                            <li>
+                                <hr class="dropdown-divider border-light-subtle">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'documentsrepository_reports' %}">View</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link user-link-dt" aria-current="page" href="{% url 'projectTrackingform' %}">Project Tracking</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <div class="group-dt-2">
+                    {% if request.user.is_authenticated %}
+                    <button type="button" class="offconvas-btn" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-list" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                        </svg>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            {% if request.user.is_authenticated %}
+            <button onclick="myFunction()" class="user-link-dt dropbtn">
+                <svg height="1.2em" viewBox="0 0 448 512">
+                    <path
+                        d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                </svg>
+                {{request.user.first_name}} {{request.user.last_name}}
+            </button>
+            <div id="myDropdown" class="dropdown-content">
+                <div class="upp-dropdown-dt p-3">
+                    <svg height="3em" viewBox="0 0 448 512">
+                        <path
+                            d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                    </svg><br>
+                    <strong style="font-size: 12px;">{{request.user.first_name}}
+                        {{request.user.last_name}}</strong><br>
+                    <span style="font-size: 10px;">{{request.user.role}}</span>
+                </div>
+                <div class="dropdown-linkdt">
+                    <form action="{% url 'logout' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="border-top border-0 bg-white" style="width: 100%; padding: 10px;">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="0.875em" viewBox="0 0 512 512">
+                                    <path
+                                        d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
+                                </svg>
+                            </span>
+                            <span style="margin-left: 0.2rem;">Sign Out</span>
+                        </button>
+                    </form>
+                </div>
+            </div>            
+            {% else %}
+            <button onclick="BackToYourLogin()" class="user-link-dt dropbtn">
+                <svg height="1.2em" viewBox="0 0 448 512">
+                    <path
+                        d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z" />
+                </svg>
+                LogIn
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
