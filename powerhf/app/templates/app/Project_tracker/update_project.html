@@ -280,50 +280,146 @@
                                     </div>
                                 </form>
                                 {% elif request.user.role == 'ASM' %}
-                                <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
-                                    {% csrf_token %}
-                                    <div class="erger-56ty">
-                                        <div class="ASM_team_dt_forms">
-                                            <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
-                                                <div class="col">
-                                                    <div class="mb-3">
-                                                        <label class="mb-2 label_input">Assigned To Technician</label>
-                                                        <select class="inputformsfill" name="asm_Technician_name_dt">
-                                                            <option value="">-------</option>
-                                                            {% for tech_n in Technician_data %}
-                                                            <option value="{{tech_n.first_name}} {{tech_n.last_name}}" {% if instance.assigned_to_technician == tech_n.first_name|add:" "|add:tech_n.last_name %}selected{% endif %}>
-                                                                {{tech_n.first_name}} {{tech_n.last_name}}</option>
-                                                            {% endfor %}
-                                                        </select>
+                                <div class="mb-5 mt-3 d-flex justify-content-end">
+                                    <div class="fwergre-3436">
+                                        <span style="font-size: 10px; font-weight: 550;">With Technician</span>
+                                        <button class="bg-white border-0" id="btn-click-for-asm-tech-entry" style="margin-right: 15px;">
+                                            <span id="open-btn-for-tech">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="royalblue" class="bi bi-toggle-off" viewBox="0 0 16 16">
+                                                    <path d="M11 4a4 4 0 0 1 0 8H8a5 5 0 0 0 2-4 5 5 0 0 0-2-4zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8M0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5"/>
+                                                </svg>
+                                            </span>
+                                            <span id="closed-btn-for-tech" style="display: none;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="royalblue" class="bi bi-toggle-on" viewBox="0 0 16 16">
+                                                    <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8"/>
+                                                </svg>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- ASM -->
+                                <div id="ASM-id-form-field">
+                                    <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
+                                        {% csrf_token %}
+                                        <div class="erger-56ty">
+                                            <div class="ASM_team_dt_forms">
+                                                <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Assigned To Technician</label>
+                                                            <select class="inputformsfill" name="asm_Technician_name_dt">
+                                                                <option value="">-------</option>
+                                                                {% for tech_n in Technician_data %}
+                                                                <option value="{{tech_n.first_name}} {{tech_n.last_name}}" {% if instance.assigned_to_technician == tech_n.first_name|add:" "|add:tech_n.last_name %}selected{% endif %}>
+                                                                    {{tech_n.first_name}} {{tech_n.last_name}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="mb-3">
-                                                        <label class="mb-2 label_input">Technician Target Date</label>
-                                                        <input type="date" class="inputformsfill" name="asm_technician_target_date_dt" value="{{instance.technician_target_date|date:"Y-m-d"}}">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Technician Target Date</label>
+                                                            <input type="date" class="inputformsfill" name="asm_technician_target_date_dt" value="{{instance.technician_target_date|date:"Y-m-d"}}">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="mb-3">
-                                                        <label class="mb-2 label_input">ASM Remarks</label>
-                                                        <input type="text" class="inputformsfill" name="asm_technician_remarks_dt" value="{{instance.asm_remarks}}">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">ASM Remarks</label>
+                                                            <input type="text" class="inputformsfill" name="asm_technician_remarks_dt" value="{{instance.asm_remarks}}">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <input type="hidden" name="hidden_dt" value="ASM_data">
-                                    <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
-                                        <button type="submit" class="btn-filling_data" id="submit_btn">
-                                            <span id="gj7uj86">Submit</span>
-                                            <div id="loading-bar" style="display: none;">
-                                                <div class="spinner-border spinner-border-sm text-light" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
+                                        <input type="hidden" name="hidden_dt" value="ASM_data">
+                                        <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
+                                            <button type="submit" class="btn-filling_data" id="submit_btn">
+                                                <span id="gj7uj86">Submit</span>
+                                                <div id="loading-bar" style="display: none;">
+                                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- ASM and Tech -->
+                                <div id="TECH-id-form-field" style="display: none;">
+                                    <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm_asm_tech">
+                                        {% csrf_token %}
+                                        <div class="erger-56ty">
+                                            <h6 class="text-secondary mt-3" style="font-size: 10px;">ASM Entry</h6>
+                                            <div class="ASM_team_dt_forms">
+                                                <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Assigned To Technician</label>
+                                                            <select class="inputformsfill" name="asm_Technician_name_dt">
+                                                                <option value="">-------</option>
+                                                                {% for tech_n in Technician_data %}
+                                                                <option value="{{tech_n.first_name}} {{tech_n.last_name}}" {% if instance.assigned_to_technician == tech_n.first_name|add:" "|add:tech_n.last_name %}selected{% endif %}>
+                                                                    {{tech_n.first_name}} {{tech_n.last_name}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Technician Target Date</label>
+                                                            <input type="date" class="inputformsfill" name="asm_technician_target_date_dt" value="{{instance.technician_target_date|date:"Y-m-d"}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">ASM Remarks</label>
+                                                            <input type="text" class="inputformsfill" name="asm_technician_remarks_dt" value="{{instance.asm_remarks}}">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </button>
-                                    </div>
-                                </form>
+                                            <h6 class="text-secondary mt-3" style="font-size: 10px;">Technician Entry</h6>
+                                            <div class="Teachcian_team_dt_forms">
+                                                <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Project Status</label>
+                                                            <select class="inputformsfill" name="technicians_project_status_dt">
+                                                                <option value="Not Started" {% if instance.project_status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                                                <option value="In Progress" {% if instance.project_status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                                                <option value="Complete" {% if instance.project_status == 'Complete' %}selected{% endif %}>Complete</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Completed Date</label>
+                                                            <input type="date" class="inputformsfill" name="technicians_completed_date_dt" value="{{instance.completed_date | date:'Y-m-d'}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="mb-2 label_input">Technician Remarks</label>
+                                                            <input type="text" class="inputformsfill" name="technician_last_remarks_dt" value="{{instance.technician_remarks}}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="asm_hidden_dt" value="ASM_data">
+                                        <input type="hidden" name="tech_hidden_dt" value="Technician_data">
+                                        <div class="button_for_form_filling mt-5 text-end mb-4" style="margin-right: 1rem;">
+                                            <button type="submit" class="btn-filling_data" id="asm_tech_submit_btn">
+                                                <span id="asm_tech_gj7uj86">Submit</span>
+                                                <div id="asm_tech_loading-bar" style="display: none;">
+                                                    <div class="spinner-border spinner-border-sm text-light" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                                 {% elif request.user.role == 'Technician' %}
                                 <form action="{% url 'projectsdataupdatesadd' projects_data.id  %}" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
                                     {% csrf_token %}
@@ -394,6 +490,15 @@
                     $('#gj7uj86').hide();
                 });
             });
+            
+            // asm and tech:
+            $(document).ready(function () {
+                $('#myForm_asm_tech').submit(function () {
+                    $("#asm_tech_submit_btn").prop("disabled", true);
+                    $('#asm_tech_loading-bar').show();
+                    $('#asm_tech_gj7uj86').hide();
+                });
+            });
         </script>
         <script>
             // In your Javascript
@@ -415,6 +520,27 @@
                         "body").style.visibility = "visible";
                 }
             };
+        </script>
+        <script>
+            let btn_asm_teach_entry = document.getElementById("btn-click-for-asm-tech-entry");
+            let closed_btn_asm_teach_entry = document.getElementById("closed-btn-for-tech");
+            let opened_btn_asm_teach_entry = document.getElementById("open-btn-for-tech");
+            let asm_entry = document.getElementById("ASM-id-form-field");
+            let teach_entry = document.getElementById("TECH-id-form-field");
+            btn_asm_teach_entry.addEventListener('click', function(){
+                if(closed_btn_asm_teach_entry.style.display == 'none'){
+                    closed_btn_asm_teach_entry.style.display = 'block';
+                    opened_btn_asm_teach_entry.style.display = 'none';
+                    asm_entry.style.display = 'none';
+                    teach_entry.style.display = 'block';
+                }
+                else if(closed_btn_asm_teach_entry.style.display == 'block'){
+                    closed_btn_asm_teach_entry.style.display = 'none';
+                    opened_btn_asm_teach_entry.style.display = 'block';
+                    asm_entry.style.display = 'block';
+                    teach_entry.style.display = 'none';
+                }
+            }) 
         </script>
 </body>
 

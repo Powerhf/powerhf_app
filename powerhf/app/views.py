@@ -1251,7 +1251,12 @@ class DocumentRepoViwerFilter(TemplateView):
     def get(self, request):          
         if not request.user.is_authenticated:
             if request.GET.get('login_user_dt') or request.GET.get('site_docs_id_dt') or request.GET.get('project_dt_types') or request.GET.get('regions_dt') or request.GET.get('circles_dt'):
-                if request.GET.get('login_user_circle') == 'All':
+                if request.GET.get('login_user_role') == 'RSM' and request.GET.get('login_user_circle') == 'All':
+                    data = DocumentRepository.objects.filter(project_type__icontains=request.GET.get('project_dt_types'),
+                    site_docs_id__icontains=request.GET.get('site_docs_id_dt'), circles__icontains=request.GET.get('circles_dt'))
+                    context = {'search':'', 'docs_data':data, 'total':data.count()}
+                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)
+                elif request.GET.get('login_user_circle') == 'All':
                     data = DocumentRepository.objects.filter(project_type__icontains=request.GET.get('project_dt_types'),
                     site_docs_id__icontains=request.GET.get('site_docs_id_dt'), region__icontains=request.GET.get('regions_dt'), 
                     circles__icontains=request.GET.get('circles_dt'))
@@ -1262,25 +1267,26 @@ class DocumentRepoViwerFilter(TemplateView):
                     site_docs_id__icontains=request.GET.get('site_docs_id_dt'))
                     context = {'search':'', 'docs_data':data, 'total':data.count()} 
                     return render(request, 'app/Docs_repo/documents_repo_reports.html', context)
-                
-            elif request.GET.get('login_user_dt') or request.GET.get('site_docs_id_dt') or request.GET.get('project_dt_types') or request.GET.get('regions_dt') or request.GET.get('circles_dt'):
-                if request.GET.get('login_user_circle') == 'All':
-                    data = DocumentRepository.objects.filter(project_type__icontains=request.GET.get('project_dt_types'),
-                    region__icontains=request.GET.get('regions_dt'),site_docs_id__icontains=request.GET.get('site_docs_id_dt'),
-                    circles__icontains=request.GET.get('circles_dt'))
-                    context = {'search':'', 'docs_data':data, 'total':data.count()} 
-                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)
-                else:
-                    data = DocumentRepository.objects.filter(user=request.GET.get('login_user_dt'),project_type__icontains=request.GET.get('project_dt_types'),
-                    region__icontains=request.GET.get('regions_dt'),site_docs_id__icontains=request.GET.get('site_docs_id_dt'),
-                    circles__icontains=request.GET.get('circles_dt'))
-                    context = {'search':'', 'docs_data':data, 'total':data.count()} 
-                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)
             else:
                 messages.error(request, 'Something went wrong, Please contact IT team.')
                 return render(request, 'app/Docs_repo/documents_repo_reports.html')
         else:
-            if request.GET.get('login_user_circle') == 'All':
+            if request.GET.get('login_user_role') == 'RSM' and request.GET.get('login_user_circle') == 'All':
+                if request.GET.get('site_docs_id_dt') or request.GET.get('project_dt_types') or request.GET.get('circles_dt'):
+                    data = DocumentRepository.objects.filter(user=request.GET.get('login_user_dt'), project_type__icontains=request.GET.get('project_dt_types'),
+                    site_docs_id__icontains=request.GET.get('site_docs_id_dt'), circles__icontains=request.GET.get('circles_dt'))
+                    filter_data = {'site_id':request.GET.get('site_docs_id_dt'), 'project_type':request.GET.get('project_dt_types'),}
+                    docs_counts = DocumentRepository.objects.filter(user=request.user)
+                    context = {'search':'', 'docs_data':data, 'total':data.count(), 'filter_data':filter_data, 'creates':docs_counts.count(), 'col':2} 
+                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)  
+                
+                elif request.GET.get('site_docs_id_dt') == '' and request.GET.get('project_dt_types') == '':
+                    messages.warning(request, 'Please enter or select field to search.')
+                    docs_counts = DocumentRepository.objects.filter(user=request.user)
+                    context = {'search':'Search For Documents', 'creates':docs_counts.count(), 'col':2}
+                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)
+                
+            elif request.GET.get('login_user_circle') == 'All':
                 if request.GET.get('site_docs_id_dt') or request.GET.get('project_dt_types') or request.GET.get('regions_dt') or request.GET.get('circles_dt'):
                     data = DocumentRepository.objects.filter(project_type__icontains=request.GET.get('project_dt_types'),
                     region__icontains=request.GET.get('regions_dt'),site_docs_id__icontains=request.GET.get('site_docs_id_dt'),
@@ -1289,12 +1295,14 @@ class DocumentRepoViwerFilter(TemplateView):
                     'region':request.GET.get('regions_dt'), 'circle':request.GET.get('circles_dt')}
                     docs_counts = DocumentRepository.objects.filter(user=request.user)
                     context = {'search':'', 'docs_data':data, 'total':data.count(), 'filter_data':filter_data, 'creates':docs_counts.count(), 'col':2} 
-                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)                
+                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)    
+                            
                 elif request.GET.get('site_docs_id_dt') == '' and request.GET.get('project_dt_types') == '' and request.GET.get('regions_dt') =='' and request.GET.get('circles_dt') == '':
                     messages.warning(request, 'Please enter or select field to search.')
                     docs_counts = DocumentRepository.objects.filter(user=request.user)
                     context = {'search':'Search For Documents', 'creates':docs_counts.count(), 'col':2}
-                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)
+                    return render(request, 'app/Docs_repo/documents_repo_reports.html', context)  
+                
             else:
                 if request.GET.get('site_docs_id_dt') or request.GET.get('project_dt_types'):
                     data = DocumentRepository.objects.filter(user=request.GET.get('login_user_dt'), project_type__icontains=request.GET.get('project_dt_types'),
@@ -1538,6 +1546,49 @@ class ProjectsDataUpdatesAdd(TemplateView):
                     messages.success(request, 'Your data has been update successfully.')
                     instance.save()
                     return redirect('projectsdataupdatesadd', instance.pk)
+            elif request.POST.get('asm_hidden_dt') == 'ASM_data' and request.POST.get('tech_hidden_dt') == 'Technician_data':
+                if request.POST.get('asm_technician_target_date_dt') == '' and request.POST.get('technicians_completed_date_dt') == '':
+                    instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt') 
+                    instance.technician_target_date = None
+                    instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
+                    instance.project_status = request.POST.get('technicians_project_status_dt')
+                    instance.completed_date = None
+                    instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
+                    messages.success(request, 'Your project is successfully assigned to technician.')
+                    instance.save()
+                    return redirect('projectTrackingform')
+                elif request.POST.get('asm_technician_target_date_dt') == '':
+                    instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt') 
+                    instance.technician_target_date = None
+                    instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
+                    instance.project_status = request.POST.get('technicians_project_status_dt')
+                    instance.completed_date = request.POST.get('technicians_completed_date_dt')
+                    instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
+                    messages.success(request, 'Your project is successfully assigned to technician.')
+                    instance.save()
+                    return redirect('projectTrackingform')
+                elif request.POST.get('technicians_completed_date_dt') == '':
+                    instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt') 
+                    instance.technician_target_date = request.POST.get('asm_technician_target_date_dt')
+                    instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
+                    instance.project_status = request.POST.get('technicians_project_status_dt')
+                    instance.completed_date = None
+                    instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
+                    messages.success(request, 'Your project is successfully assigned to technician.')
+                    instance.save()
+                    return redirect('projectTrackingform')
+                else:
+                    instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt')
+                    instance.technician_target_date = request.POST.get('asm_technician_target_date_dt')
+                    instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
+                    instance.project_status = request.POST.get('technicians_project_status_dt')
+                    instance.completed_date = request.POST.get('technicians_completed_date_dt')
+                    instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
+                    instance.pendings = 'No'
+                    instance.completed = 'Yes'
+                    messages.success(request, 'Your project is successfully assigned to technician.')
+                    instance.save()
+                    return redirect('projectTrackingform')
             elif request.POST.get('hidden_dt') == 'ASM_data':
                 if request.POST.get('asm_technician_target_date_dt') == '':
                     instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt') 

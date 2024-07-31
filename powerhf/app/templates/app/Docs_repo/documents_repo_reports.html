@@ -82,6 +82,7 @@
                                     <label style="font-size: 13px;" class="m-1 text-secondary">Circles</label>
                                     <select name="circles_dt" class="inputformsfill border" id="circle_id">
                                         <option value="">Select</option>
+                                        {% if request.user.region == 'All' and request.user.circle == 'All' %}
                                         <option value="JK" {% if filter_data.circle == 'JK' %}selected{% endif %}>JK</option>
                                         <option value="UPE" {% if filter_data.circle == 'UPE' %}selected{% endif %}>UPE</option>
                                         <option value="UPW" {% if filter_data.circle == 'UPW' %}selected{% endif %}>UPW</option>
@@ -105,6 +106,34 @@
                                         <option value="TN" {% if filter_data.circle == 'TN' %}selected{% endif %}>TN</option>
                                         <option value="KN" {% if filter_data.circle == 'KN' %}selected{% endif %}>KN</option>
                                         <option value="KL" {% if filter_data.circle == 'KL' %}selected{% endif %}>KL</option>
+                                        {% elif request.user.region == 'North' and request.user.circle == 'All' %}
+                                        <option value="JK" {% if filter_data.circle == 'JK' %}selected{% endif %}>JK</option>
+                                        <option value="UPE" {% if filter_data.circle == 'UPE' %}selected{% endif %}>UPE</option>
+                                        <option value="UPW" {% if filter_data.circle == 'UPW' %}selected{% endif %}>UPW</option>
+                                        <option value="HP" {% if filter_data.circle == 'HP' %}selected{% endif %}>HP</option>
+                                        <option value="HR" {% if filter_data.circle == 'HR' %}selected{% endif %}>HR</option>
+                                        <option value="PB" {% if filter_data.circle == 'PB' %}selected{% endif %}>PB</option>
+                                        <option value="DL" {% if filter_data.circle == 'DL' %}selected{% endif %}>DL</option>
+                                        {% elif request.user.region == 'West' and request.user.circle == 'All' %}
+                                        <option value="MU" {% if filter_data.circle == 'MU' %}selected{% endif %}>MU</option>
+                                        <option value="MH" {% if filter_data.circle == 'MH' %}selected{% endif %}>MH</option>
+                                        <option value="GJ" {% if filter_data.circle == 'GJ' %}selected{% endif %}>GJ</option>
+                                        <option value="RJ" {% if filter_data.circle == 'RJ' %}selected{% endif %}>RJ</option>
+                                        <option value="RJ" {% if filter_data.circle == 'RJ' %}selected{% endif %}>MP</option>
+                                        <option value="CG" {% if filter_data.circle == 'CG' %}selected{% endif %}>CG</option>
+                                        {% elif request.user.region == 'East' and request.user.circle == 'All' %}
+                                        <option value="AS" {% if filter_data.circle == 'AS' %}selected{% endif %}>AS / NE</option>
+                                        <option value="KOL" {% if filter_data.circle == 'KOL' %}selected{% endif %}>WB / KOL</option>
+                                        <option value="OD" {% if filter_data.circle == 'OD' %}selected{% endif %}>OD</option>
+                                        <option value="JH" {% if filter_data.circle == 'JH' %}selected{% endif %}>JH</option>
+                                        <option value="BH" {% if filter_data.circle == 'BH' %}selected{% endif %}>BH</option>
+                                        {% elif request.user.region == 'South' and request.user.circle == 'All' %}
+                                        <option value="AP" {% if filter_data.circle == 'AP' %}selected{% endif %}>AP</option>
+                                        <option value="TS" {% if filter_data.circle == 'TS' %}selected{% endif %}>TS</option>
+                                        <option value="TN" {% if filter_data.circle == 'TN' %}selected{% endif %}>TN</option>
+                                        <option value="KN" {% if filter_data.circle == 'KN' %}selected{% endif %}>KN</option>
+                                        <option value="KL" {% if filter_data.circle == 'KL' %}selected{% endif %}>KL</option>
+                                        {% endif %}
                                     </select>
                                 </div>
                                 {% endif %}
@@ -115,11 +144,14 @@
                                 <div class="col-md-{{col}} text-end d-flex justify-content-end">
                                     <div class="gerg">
                                         <input type="hidden" name="login_user_dt" value="{{request.user.id}}">
+                                        <input type="hidden" name="login_user_role" value="{{request.user.role}}">                                    
                                         <input type="hidden" name="login_user_circle" value="{{request.user.circle}}">                                    
                                         <button type="submit" class="bg-secondary btn-downloadall p-2"
                                             style="margin-top: 26px;">View</button>
                                         {% if request.user.region == 'All' and request.user.circle == 'All' %}
                                         <button type="button" class="bg-white border-0 text-primary" onclick="ClearAllFiltersALL()" style="font-size: 10px; font-weight: 550; margin-left: 10px;">Clear All</button>
+                                        {% elif request.user.circle == 'All' %}
+                                        <button type="button" class="bg-white border-0 text-primary" onclick="ClearAllFiltersCirclesALL()" style="font-size: 10px; font-weight: 550; margin-left: 10px;">Clear All</button>
                                         {% else %}
                                         <button type="button" class="bg-white border-0 text-primary" onclick="ClearAllFilters()" style="font-size: 10px; font-weight: 550; margin-left: 10px;">Clear All</button>
                                         {% endif %}
@@ -396,6 +428,25 @@
                         for(var i=0; i < circle_options.length; i++){
                             circle_options[i].selected = false;
                         }
+
+                        sites.value = '';
+                    };
+                    
+                    function ClearAllFiltersCirclesALL(){
+                        let project = document.getElementById("project_id"); 
+                        let circles = document.getElementById("circle_id"); 
+                        let sites = document.getElementById("sites_id");
+                        
+                        let project_options = project.options;
+                        let circle_options = circles.options;
+
+                        for(var i=0; i < project_options.length; i++){
+                            project_options[i].selected = false;
+                        };
+
+                        for(var i=0; i < circle_options.length; i++){
+                            circle_options[i].selected = false;
+                        };
 
                         sites.value = '';
                     };
