@@ -348,7 +348,7 @@ CIRCLES = (
 
 FILE_CATEGORY = (
     ('FSR','FSR'),('Civil Image','Civil Image'),('Civil Work','Civil Work'),('Electrical Work','Electrical Work')
-    ,('Site Image','Site Image'),('PM Image','PM Image'),
+    ,('Site Image','Site Image'),('PM Image','PM Image'), ('Survey Report','Survey Report'), ('I&C Report ','I&C Report ')
 )
 
 class  DocumentsOfRepository(models.Model):
