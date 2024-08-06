@@ -1578,17 +1578,28 @@ class ProjectsDataUpdatesAdd(TemplateView):
                     instance.save()
                     return redirect('projectTrackingform')
                 else:
-                    instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt')
-                    instance.technician_target_date = request.POST.get('asm_technician_target_date_dt')
-                    instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
-                    instance.project_status = request.POST.get('technicians_project_status_dt')
-                    instance.completed_date = request.POST.get('technicians_completed_date_dt')
-                    instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
-                    instance.pendings = 'No'
-                    instance.completed = 'Yes'
-                    messages.success(request, 'Your project is successfully assigned to technician.')
-                    instance.save()
-                    return redirect('projectTrackingform')
+                    if request.POST.get('technicians_project_status_dt') == 'Not Started' or request.POST.get('technicians_project_status_dt') == 'In Progress':
+                        instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt')
+                        instance.technician_target_date = request.POST.get('asm_technician_target_date_dt')
+                        instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
+                        instance.project_status = request.POST.get('technicians_project_status_dt')
+                        instance.completed_date = request.POST.get('technicians_completed_date_dt')
+                        instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
+                        messages.success(request, 'Your project is successfully assigned to technician.')
+                        instance.save()
+                        return redirect('projectTrackingform')
+                    elif request.POST.get('technicians_project_status_dt') == 'Complete':
+                        instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt')
+                        instance.technician_target_date = request.POST.get('asm_technician_target_date_dt')
+                        instance.asm_remarks = request.POST.get('asm_technician_remarks_dt')
+                        instance.project_status = request.POST.get('technicians_project_status_dt')
+                        instance.completed_date = request.POST.get('technicians_completed_date_dt')
+                        instance.technician_remarks = request.POST.get('technician_last_remarks_dt')
+                        instance.pendings = 'No'
+                        instance.completed = 'Yes'
+                        messages.success(request, 'Your project is successfully assigned to technician.')
+                        instance.save()
+                        return redirect('projectTrackingform')
             elif request.POST.get('hidden_dt') == 'ASM_data':
                 if request.POST.get('asm_technician_target_date_dt') == '':
                     instance.assigned_to_technician = request.POST.get('asm_Technician_name_dt') 
