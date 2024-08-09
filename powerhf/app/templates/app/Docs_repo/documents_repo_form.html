@@ -31,7 +31,7 @@
                         </div>
                         {% if messages %}
                         {% for msg in messages %}
-                        <div class="card {{msg.tags}} mb-5 p-2" id="Error-close"
+                        <!-- <div class="card {{msg.tags}} mb-5 p-2" id="Error-close"
                             style="margin-left: 0.8rem; margin-right: 1.5rem;">
                             <div class="d-flex">
                                 <div class="inr-success-int1" style="width: 100%; padding-top: 4;">
@@ -47,9 +47,30 @@
                                     </button>
                                 </div>
                             </div>
+                        </div> -->
+                        <div class="modal document-create-modal" id="Repo-create-modal" style="display: block;" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content pt-2 pb-2">
+                                    <div class="modal-body text-center">
+                                        {% if msg.tags == 'error' %}
+                                        <div class="p-2 text-danger" style="margin-left: 20px; margin-right: 20px;">
+                                            <p>{{msg}}</p>                                            
+                                        </div>
+                                        {% else %}
+                                        <div class="p-2">
+                                            <p>Your Repository has been created successfully.</p>
+                                            <p>Created Document ID is <b>{{msg}}</b><br></p>                                            
+                                        </div>   
+                                        {% endif %}                                     
+                                        <div class="d-grid gap-2 col-2 mx-auto">
+                                            <button type="button" class="btn btn-secondary mt-3" onclick="ClosedRepoModal()">Ok</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         {% endfor %}
-                        {% endif %}
+                        {% endif %}                        
                         <form action="" method="POST" class="m-3" enctype="multipart/form-data" id="myForm">
                             {% csrf_token %}
                             <div class="erger-56ty">
@@ -146,6 +167,12 @@
                     $('#gj7uj86').hide();
                 });
             });
+        </script>
+        <!-- Repo Created Msg -->
+        <script>
+            function ClosedRepoModal(){
+                document.getElementById('Repo-create-modal').style.display = 'none';
+            }
         </script>
 </body>
 

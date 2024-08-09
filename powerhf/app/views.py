@@ -1215,7 +1215,7 @@ class DocumentsRepoFormViews(TemplateView):
                     docs = DocumentsOfRepository.objects.create(user=request.user, file_name=file_nm, files=dox)
                     reg.documents.add(docs)
                 
-                messages.success(request, 'Your data has been upload successfully.')
+                messages.success(request, f'{docs_id}')
 
                 return redirect('documentsrepository_form')
             else:
@@ -1645,6 +1645,9 @@ class ProjectsDataUpdatesAdd(TemplateView):
                 return redirect('projectsdataupdatesadd', instance.pk)
         else:
             return redirect('auth')
+        
+
+
     
 
 #################### User Logout ####################

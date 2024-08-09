@@ -51,6 +51,7 @@ urlpatterns = [
     path('project-tracking/completed/', ProjectTrackingComplete.as_view(), name='projectTrackingcomplete'),
     path('project-tracking/sales-asm-technicians/<int:pk>/', ProjectsDataUpdatesAdd.as_view(), name='projectsdataupdatesadd'),
 
+    # path('send_email/', Get_Mail, name='sendmail'),
     
     # Logout:
     path('user/logout/', LogOut.as_view(), name='logout'),
